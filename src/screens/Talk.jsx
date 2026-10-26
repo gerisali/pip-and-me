@@ -203,7 +203,7 @@ function Conversation({ mission }) {
             disabled={busy}
             onText={(t, meta) => send(t, meta)}
             onUnavailable={() => setTyping(true)}
-            prompt={`A 9-year-old Turkish girl practising English with Pip the fox. Topic: ${mission.title}. ${(mission.targets || []).join(' ')}`}
+            prompt={`A 9-year-old Turkish girl practising English with ${settings.characterName} (${settings.characterDescription}). Topic: ${mission.title}. ${(mission.targets || []).join(' ')}`}
           />
         )}
         <button className="btn round" onClick={() => setTyping((t) => !t)} aria-label="Keyboard"><Icon name={typing ? 'mic' : 'keyboard'} size={24} /></button>

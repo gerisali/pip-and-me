@@ -65,7 +65,7 @@ Not: iPad, Mac'teki yerel adrese bağlandığında mikrofon çalışmaz (Safari 
 - **Mikrofon düğmesi yok, klavye çıkıyor:** `OPENAI_API_KEY` eksik.
 - **Pip'in sesi robotik:** OpenAI sesi kullanılamıyor, cihaz sesi devrede. `TTS_PROVIDER=openai` ve anahtarı kontrol edin.
 - **6 Ocak 2027'den önce:** OpenAI'ın şu anki ses modeli (`gpt-4o-mini-tts`) kapanıyor. Aralık ayında yeni ses servisine geçişi birlikte yapacağız.
-- **Veriler nerede?** Sadece iPad'de. Ayda bir *Tam yedek* indirmeniz önerilir.
+- **Veriler nerede?** Kızınızın iPad'inde ve (bulut senkronu açıksa) Vercel hesabınızdaki Upstash veritabanında. Ayda bir *Tam yedek* indirmeniz yine de önerilir.
 
 ## Karakteri değiştirmek
 
@@ -76,3 +76,23 @@ Not: iPad, Mac'teki yerel adrese bağlandığında mikrofon çalışmaz (Safari 
 - **Görseller:** Her ruh hali için bir resim (normal, konuşurken, mutlu, düşünürken, şaşırmış, dinlerken). Sadece "Normal" bile yeterli; "Konuşurken" resmi eklerseniz konuşma sırasında ağız açılıp kapanır.
 
 Görsellerin kızınızın kendi çizimi ya da kullanım izni açık (CC0 gibi) olması gerekir; dizi ve film karakterleri telif hakkıyla korunur.
+
+## Bulut senkronu ve cihazlar
+
+Vercel → projeniz → *Storage* → **Upstash (Redis)** bağlıysa senkron otomatik açılır (bağlantı bilgilerini Vercel ekler; bağladıktan sonra bir kez *Redeploy* yapın).
+
+İlk açılışta her cihaz için seçim yapılır:
+
+- **Çocuk cihazı** (kızınızın iPad'i): dersler burada yapılır. İlerleme her oturumdan sonra ve iki dakikada bir buluta gönderilir.
+- **Veli cihazı** (Mac, telefon): doğrudan veli paneli açılır. Özet, konuşmalar ve raporlar buluttan gelir. Ayar, karakter ve hafta paketi değişiklikleri kızınızın iPad'ine gider. Veli cihazında *Önizle* ile çocuk ekranına bakabilirsiniz; orada yapılanlar ilerlemeye yazılmaz.
+
+Rol sonradan **Veli → Ayarlar → Bu cihaz** bölümünden değiştirilebilir.
+
+## Sıfırlama
+
+**Veli → Ayarlar → Sıfırla** (kutuya `SIL` yazın):
+
+- **İlerlemeyi sıfırla:** konuşmalar, kelimeler, yıldızlar, mektuplar, hikâyeler, plan ve hafta silinir; ad, PIN ve karakter kalır.
+- **Her şeyi sıfırla:** yukarıdakilere ek olarak ad, PIN, karakter ve yüklenen paketler de silinir; uygulama kurulum ekranına döner (cihaz rolü korunur).
+
+Bulut açıksa sıfırlama buluttaki veriyi de siler ve diğer cihazlara bir sonraki açılışta uygulanır.
