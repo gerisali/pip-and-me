@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApp } from '../App.jsx';
 import Icon from '../components/Icon.jsx';
 import { TopBar } from './Home.jsx';
 import Readable, { Quiz } from '../components/Readable.jsx';
 import Mic from '../components/Mic.jsx';
-import { speak } from '../lib/audio.js';
+import { speak, prefetch } from '../lib/audio.js';
 import { events } from '../lib/db.js';
 import { addStars } from '../lib/learner.js';
 import { markPlanItem } from '../lib/content.js';
@@ -37,6 +37,7 @@ function Card({ card, onBack }) {
   const [answered, setAnswered] = useState(0);
   const [readRes, setReadRes] = useState(null);
   const fact = card.facts?.[0];
+  useEffect(() => { prefetch([card.text, ...(card.facts || [])]); }, [card.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="screen">

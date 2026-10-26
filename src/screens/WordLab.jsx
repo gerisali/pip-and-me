@@ -4,7 +4,7 @@ import Icon from '../components/Icon.jsx';
 import { TopBar } from './Home.jsx';
 import Pip from '../character/Pip.jsx';
 import Mic from '../components/Mic.jsx';
-import { speak } from '../lib/audio.js';
+import { speak, waitIdle, prefetch } from '../lib/audio.js';
 import { getLearner, dueWords, wordResult, addStars } from '../lib/learner.js';
 import { markPlanItem } from '../lib/content.js';
 import { useSession } from '../lib/session.js';
@@ -22,7 +22,11 @@ export default function WordLab({ mode = 'vocab' }) {
 
   useEffect(() => {
     (async () => {
-      if (mode === 'phonics') return setItems(buildPhonics(pack));
+      if (mode === 'phonics') {
+        const ph = buildPhonics(pack);
+        prefetch(ph.flatMap((it) => [`Find the word with ${it.pattern.pattern}.`, it.word, `Yes! ${it.word}!`, ...it.options]));
+        return setItems(ph);
+      }
       const L = await getLearner();
       const vocab = (pack?.vocab || []).map((v) => ({ word: v.word.toLowerCase(), emoji: v.emoji, tr: v.tr }));
       const lookup = (w) => vocab.find((v) => v.word === w) || { word: w, emoji: L.words[w]?.emoji || '❓', tr: L.words[w]?.tr };
@@ -30,27 +34,34 @@ export default function WordLab({ mode = 'vocab' }) {
       if (words.length < ROUND) words = [...words, ...shuffle(vocab.map((v) => v.word).filter((w) => !words.includes(w)))].slice(0, ROUND);
       words = shuffle(words);
       const pool = vocab.filter((v) => v.emoji);
-      setItems(
+      const built =
         words.map((w, i) => {
           const item = lookup(w);
           const game = i % 3 === 1 && /^[a-z]{3,7}$/.test(w) ? 'spell' : i % 3 === 2 && health.stt ? 'say' : 'listen';
           const options = shuffle([item, ...shuffle(pool.filter((p) => p.word !== w && p.emoji !== item.emoji)).slice(0, 3)]);
           return { ...item, game, options };
-        })
-      );
+        });
+      // warm the voice cache so taps play right away
+      prefetch(built.flatMap((it) => [it.word, `Yes! ${it.word}!`]));
+      setItems(built);
     })();
   }, [mode, pack, health.stt]);
 
   async function answer(item, correct) {
     await wordResult(item.word, correct, item.game, session);
     if (correct) setScore((s) => s + 1);
-    setTimeout(async () => {
-      if (k + 1 >= items.length) {
-        await addStars(Math.max(1, Math.round((score + (correct ? 1 : 0)) / 3)));
-        await markPlanItem(mode === 'phonics' ? 'phonics' : 'wordlab', settings.daysPerWeek);
-        setFinished(true);
-      } else setK(k + 1);
-    }, correct ? 900 : 1800);
+    // move on only after the feedback voice has finished (and the child has seen the result)
+    const t0 = Date.now();
+    await new Promise((r) => setTimeout(r, 150));
+    await waitIdle(correct ? 5000 : 8000);
+    const minWait = correct ? 700 : 1500;
+    const left = minWait - (Date.now() - t0);
+    if (left > 0) await new Promise((r) => setTimeout(r, left));
+    if (k + 1 >= items.length) {
+      await addStars(Math.max(1, Math.round((score + (correct ? 1 : 0)) / 3)));
+      await markPlanItem(mode === 'phonics' ? 'phonics' : 'wordlab', settings.daysPerWeek);
+      setFinished(true);
+    } else setK(k + 1);
   }
 
   const title = mode === 'phonics' ? 'Sound hunt' : 'Word Lab';
@@ -113,7 +124,7 @@ function Spell({ item, onDone }) {
     if (res === null && typed.length === item.word.length) {
       const c = typed === item.word;
       setRes(c);
-      speak(c ? `Yes! ${item.word.split('').join(', ')}. ${item.word}!` : `It's ${item.word.split('').join(', ')}.`, { rate: 0.85 });
+      speak(c ? `Yes! ${item.word}!` : `It's ${item.word.split('').join(', ')}. ${item.word}.`, { rate: 0.85 });
       onDone(item, c);
     }
   }, [typed]); // eslint-disable-line react-hooks/exhaustive-deps

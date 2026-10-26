@@ -3,7 +3,7 @@ import { useApp } from '../App.jsx';
 import Icon from '../components/Icon.jsx';
 import { TopBar } from './Home.jsx';
 import Readable, { Quiz } from '../components/Readable.jsx';
-import { speak } from '../lib/audio.js';
+import { speak, prefetch } from '../lib/audio.js';
 import { chat } from '../lib/api.js';
 import { events, kv } from '../lib/db.js';
 import { applyAnalysis, addStars } from '../lib/learner.js';
@@ -45,6 +45,7 @@ function Letter({ letter, saved, onBack }) {
   const session = useSession('mailbox', { letterId: letter.id });
   const [text, setText] = useState(saved?.reply || '');
   const [pipReply, setPipReply] = useState(saved?.pipReply || null);
+  useEffect(() => { prefetch([letter.body, letter.replyPrompt, saved?.pipReply]); }, [letter.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const t0 = useRef(Date.now());

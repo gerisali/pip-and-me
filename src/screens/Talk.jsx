@@ -4,7 +4,7 @@ import Icon from '../components/Icon.jsx';
 import { TopBar } from './Home.jsx';
 import Pip from '../character/Pip.jsx';
 import Mic from '../components/Mic.jsx';
-import { speak } from '../lib/audio.js';
+import { speak, prefetch } from '../lib/audio.js';
 import { chat } from '../lib/api.js';
 import { events, kv } from '../lib/db.js';
 import { applyAnalysis, addStars } from '../lib/learner.js';
@@ -61,6 +61,7 @@ function Conversation({ mission }) {
   const [typing, setTyping] = useState(!health.stt);
   const [draft, setDraft] = useState('');
   const [showHints, setShowHints] = useState(false);
+  useEffect(() => { prefetch(mission.hints || []); }, [mission.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [showText, setShowText] = useState(true);
   const [ended, setEnded] = useState(null);
   const [pipState, setPipState] = useState('happy');
