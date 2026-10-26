@@ -3,6 +3,7 @@
 import { config, isMock } from './config.js';
 import { buildRequest } from './prompts.js';
 import { mockChat } from './mock.js';
+import { cloudEnabled, redis, pipeline, K } from './store.js';
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json' } });
@@ -46,6 +47,7 @@ export async function health(req) {
     stt: !!config.openaiKey,
     tts: config.ttsProvider === 'openai' && !!config.openaiKey ? 'openai' : 'browser',
     chatModel: config.chatModel,
+    cloud: cloudEnabled(),
   });
 }
 
@@ -186,4 +188,74 @@ export async function tts(req) {
   return new Response(r.body, { status: 200, headers: { 'content-type': 'audio/mpeg', 'cache-control': 'private, max-age=86400' } });
 }
 
-export const routes = { health, chat, transcribe, tts };
+// ---------- /api/sync ----------
+// One endpoint, several operations (any combination in one body):
+//   events: [...]        child pushes new learning events (idempotent: keyed by event id)
+//   put: {key, v, t}     store a synced value if t is newer than the cloud's copy (last write wins)
+//   get: key             fetch a synced value
+//   pullEvents: true     return every event (parent devices)
+//   reset: 'progress' | 'all'
+// Always returns meta: { key: t } and the last reset marker.
+const SYNC_KEYS = ['settings', 'learner', 'letters', 'missionsDone', 'planState', 'planIndex', 'currentWeek', 'importedPacks', 'characterImages'];
+const PROGRESS_KEYS = ['learner', 'letters', 'missionsDone', 'planState', 'planIndex', 'currentWeek'];
+
+export async function sync(req) {
+  if (!authorized(req)) return json({ error: 'unauthorized' }, 401);
+  if (!cloudEnabled()) return json({ error: 'cloud_disabled' }, 501);
+  const b = await req.json().catch(() => ({}));
+  const out = {};
+
+  if (b.reset === 'progress' || b.reset === 'all') {
+    const keys = b.reset === 'all' ? SYNC_KEYS : PROGRESS_KEYS;
+    const marker = { t: Date.now(), scope: b.reset };
+    await pipeline([
+      ['DEL', K.events, ...keys.map(K.value)],
+      ['HDEL', K.times, ...keys],
+      ['SET', K.reset, JSON.stringify(marker)],
+    ]);
+    out.resetDone = marker;
+  }
+
+  if (Array.isArray(b.events) && b.events.length) {
+    const args = ['HSET', K.events];
+    for (const e of b.events.slice(0, 200)) if (e && e.id != null) args.push(String(e.id), JSON.stringify(e));
+    if (args.length > 2) await redis(...args);
+    out.stored = (args.length - 2) / 2;
+  }
+
+  if (b.put && SYNC_KEYS.includes(b.put.key)) {
+    const { key, v, t } = b.put;
+    const cur = Number((await redis('HGET', K.times, key)) || 0);
+    if (Number(t) > cur) {
+      await pipeline([
+        ['SET', K.value(key), JSON.stringify(v ?? null)],
+        ['HSET', K.times, key, Number(t)],
+      ]);
+      out.put = 'ok';
+    } else out.put = 'stale';
+  }
+
+  if (b.get && SYNC_KEYS.includes(b.get)) {
+    const [v, t] = await pipeline([
+      ['GET', K.value(b.get)],
+      ['HGET', K.times, b.get],
+    ]);
+    out.value = v == null ? null : JSON.parse(v);
+    out.t = Number(t || 0);
+  }
+
+  if (b.pullEvents) {
+    const vals = (await redis('HVALS', K.events)) || [];
+    out.events = vals.map((x) => JSON.parse(x)).sort((a, z) => (a.ts || 0) - (z.ts || 0));
+  }
+
+  const [flat, reset] = await pipeline([['HGETALL', K.times], ['GET', K.reset]]);
+  const meta = {};
+  for (let i = 0; i + 1 < (flat || []).length; i += 2) meta[flat[i]] = Number(flat[i + 1]);
+  out.meta = meta;
+  out.reset = reset ? JSON.parse(reset) : null;
+  out.now = Date.now();
+  return json(out);
+}
+
+export const routes = { health, chat, transcribe, tts, sync };
