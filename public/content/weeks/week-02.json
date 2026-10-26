@@ -1,0 +1,163 @@
+{
+  "id": "week-02",
+  "week": 2,
+  "level": "starters",
+  "title": "Animal friends",
+  "titleTr": "Hayvan dostlar",
+  "theme": "Animals and where they live",
+  "goals": {
+    "canDo": [
+      "Describe an animal: what it has got and what colour it is",
+      "Say what an animal can and can't do",
+      "Say where an animal lives",
+      "Ask and answer 'Is it a ...?'"
+    ],
+    "grammar": ["have got / has got", "can / can't", "It lives in ...", "Is it a ...? Yes, it is. / No, it isn't."],
+    "phonics": ["short o", "short u", "sh"]
+  },
+  "vocab": [
+    { "word": "dog", "emoji": "🐶", "tr": "köpek", "phonics": "short o" },
+    { "word": "frog", "emoji": "🐸", "tr": "kurbağa", "phonics": "short o" },
+    { "word": "fox", "emoji": "🦊", "tr": "tilki", "phonics": "short o" },
+    { "word": "duck", "emoji": "🦆", "tr": "ördek", "phonics": "short u" },
+    { "word": "bug", "emoji": "🐞", "tr": "böcek", "phonics": "short u" },
+    { "word": "fish", "emoji": "🐟", "tr": "balık", "phonics": "sh" },
+    { "word": "shark", "emoji": "🦈", "tr": "köpek balığı", "phonics": "sh" },
+    { "word": "sheep", "emoji": "🐑", "tr": "koyun", "phonics": "sh" },
+    { "word": "shell", "emoji": "🐚", "tr": "kabuk", "phonics": "sh" },
+    { "word": "turtle", "emoji": "🐢", "tr": "kaplumbağa", "phonics": "ur" },
+    { "word": "octopus", "emoji": "🐙", "tr": "ahtapot", "phonics": "short o" },
+    { "word": "owl", "emoji": "🦉", "tr": "baykuş", "phonics": "ow" },
+    { "word": "bird", "emoji": "🐦", "tr": "kuş", "phonics": "ir" },
+    { "word": "monkey", "emoji": "🐒", "tr": "maymun", "phonics": "short o" },
+    { "word": "elephant", "emoji": "🐘", "tr": "fil", "phonics": "short e" },
+    { "word": "lion", "emoji": "🦁", "tr": "aslan", "phonics": "i_e" },
+    { "word": "giraffe", "emoji": "🦒", "tr": "zürafa", "phonics": "short a" },
+    { "word": "tail", "emoji": "🦊", "tr": "kuyruk", "phonics": "ai" },
+    { "word": "legs", "emoji": "🦵", "tr": "bacaklar", "phonics": "short e" },
+    { "word": "wings", "emoji": "🪽", "tr": "kanatlar", "phonics": "short i" },
+    { "word": "sea", "emoji": "🌊", "tr": "deniz", "phonics": "ea" },
+    { "word": "forest", "emoji": "🌲", "tr": "orman", "phonics": "short o" },
+    { "word": "jungle", "emoji": "🌴", "tr": "orman (tropikal)", "phonics": "short u" },
+    { "word": "farm", "emoji": "🚜", "tr": "çiftlik", "phonics": "ar" },
+    { "word": "swim", "emoji": "🏊", "tr": "yüzmek", "phonics": "short i" },
+    { "word": "jump", "emoji": "🦘", "tr": "zıplamak", "phonics": "short u" },
+    { "word": "run", "emoji": "🏃", "tr": "koşmak", "phonics": "short u" },
+    { "word": "fly", "emoji": "🕊️", "tr": "uçmak", "phonics": "y" }
+  ],
+  "chunks": [
+    { "text": "It's got ...", "tr": "Onun ... var.", "example": "It's got a long tail." },
+    { "text": "It can ... / It can't ...", "tr": "... yapabilir / ... yapamaz", "example": "It can swim. It can't fly." },
+    { "text": "It lives in ...", "tr": "... yaşar.", "example": "It lives in the sea." },
+    { "text": "Is it a ...?", "tr": "O bir ... mı?", "example": "Is it a frog? Yes, it is!" },
+    { "text": "My favourite ... is ...", "tr": "En sevdiğim ... ...", "example": "My favourite animal is the octopus." }
+  ],
+  "talkMissions": [
+    {
+      "id": "w2-t1",
+      "title": "Guess the animal",
+      "titleTr": "Hayvanı tahmin et",
+      "goal": "Guessing game. Pip describes an animal with 'It's got / It can / It lives in' and the child guesses with 'Is it a ...?'. Then swap: the child describes, Pip guesses (Pip guesses wrong once on purpose so the child must add a clue).",
+      "opener": "Let's play a game! I think of an animal. It's got eight legs. It lives in the sea. Is it a cat? No! Can you guess?",
+      "targets": ["Is it a ...?", "It's got ...", "It can ...", "It lives in ..."],
+      "hints": ["Is it an octopus?", "It's got four legs.", "It can swim.", "It lives in the forest."]
+    },
+    {
+      "id": "w2-t2",
+      "title": "Super animals",
+      "titleTr": "Süper hayvanlar",
+      "goal": "Talk about what animals can and can't do. Pip is amazed by Earth animals (on Zoot no animal can swim). Child says what 3 animals can/can't do and what she can do.",
+      "opener": "On Zoot, animals can't swim. Water is very strange for us! Which Earth animals can swim?",
+      "targets": ["It can ...", "It can't ...", "I can ..."],
+      "hints": ["Fish can swim.", "A duck can swim and fly.", "A dog can't fly.", "I can swim too!"]
+    },
+    {
+      "id": "w2-t3",
+      "title": "My new animal",
+      "titleTr": "Benim yeni hayvanım",
+      "goal": "Child invents and describes a new animal (from her animal card drawing): name, colour, body parts, what it can do, where it lives. Pip asks curious questions to make descriptions longer.",
+      "opener": "You are a great artist! Can you make a new animal for me? What's its name?",
+      "targets": ["Its name is ...", "It's got ...", "It can ...", "It lives in ..."],
+      "hints": ["Its name is Zuzu.", "It's got big pink wings.", "It can fly and swim.", "It lives in the jungle."]
+    }
+  ],
+  "letters": [
+    {
+      "id": "w2-l1",
+      "subject": "A strange animal!",
+      "body": "Dear friend,\nToday I am at the sea. I can see a very strange animal! It's got eight long legs. It hasn't got a tail. It can change colour! It is very clever. What is it? I think it is an octopus. Is it? Can you tell me your favourite sea animal?\nPip 🦊",
+      "replyPrompt": "Answer Pip: Is it an octopus? What is your favourite sea animal? What has it got?",
+      "replyPromptTr": "Pip'e cevap ver: Bu bir ahtapot mu? En sevdiğin deniz hayvanı ne? Nesi var?",
+      "starters": ["Dear Pip,", "Yes, it is an", "My favourite sea animal is", "It's got"],
+      "questions": [
+        { "q": "How many legs has the animal got?", "options": ["Four", "Eight", "Two"], "answer": 1 },
+        { "q": "What can it do?", "options": ["Change colour", "Fly", "Sing"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w2-l2",
+      "subject": "Night bird",
+      "body": "Dear friend,\nIt is night and I can't sleep. I look at a tree. Two big yellow eyes are looking at me! It is a bird. It's got big eyes and soft wings. It says \"hoo hoo\". It can fly at night. It lives in the forest. My friend says it is an owl. Do you like owls?\nPip 🦊",
+      "replyPrompt": "Tell Pip: Do you like owls? Which animal can you hear at night?",
+      "replyPromptTr": "Pip'e yaz: Baykuşları sever misin? Geceleri hangi hayvanı duyabilirsin?",
+      "starters": ["Dear Pip,", "I like owls because", "At night I can hear", "It's got"],
+      "questions": [
+        { "q": "What colour are the owl's eyes?", "options": ["Yellow", "Blue", "Red"], "answer": 0 },
+        { "q": "Where does the owl live?", "options": ["In the sea", "In the forest", "On a farm"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w2-l3",
+      "subject": "At the farm",
+      "body": "Dear friend,\nToday I am at a farm. There are sheep, ducks and a big dog. The sheep are white and soft. The ducks can swim in the pond. The dog can run very fast. But it can't climb trees. I can climb trees! What can you do? Can you swim? Can you climb?\nPip 🦊",
+      "replyPrompt": "Tell Pip three things you can do and one thing you can't do.",
+      "replyPromptTr": "Pip'e yapabildiğin üç şeyi ve yapamadığın bir şeyi yaz.",
+      "starters": ["Dear Pip,", "I can", "I can't", "My friend can"],
+      "questions": [
+        { "q": "What can the ducks do?", "options": ["Climb", "Swim", "Fly to Zoot"], "answer": 1 },
+        { "q": "Can the dog climb trees?", "options": ["Yes, it can", "No, it can't"], "answer": 1 }
+      ]
+    }
+  ],
+  "story": {
+    "title": "My new animal",
+    "prompt": "Invent a new animal. Draw it and make its animal card.",
+    "promptTr": "Yeni bir hayvan uydur. Onu çiz ve hayvan kartını hazırla.",
+    "pages": [
+      { "prompt": "Draw your new animal. What's its name? What colour is it?", "promptTr": "Yeni hayvanını çiz. Adı ne? Ne renk?", "starters": ["Its name is ...", "It is ..."] },
+      { "prompt": "What has it got? What can it do?", "promptTr": "Nesi var? Neler yapabilir?", "starters": ["It's got ...", "It can ...", "It can't ..."] },
+      { "prompt": "Where does it live? What does it eat?", "promptTr": "Nerede yaşar? Ne yer?", "starters": ["It lives in ...", "It eats ..."] }
+    ]
+  },
+  "explorer": [
+    {
+      "id": "w2-e1",
+      "title": "Octopuses",
+      "emoji": "🐙",
+      "text": "An octopus lives in the sea. It has got eight arms. It hasn't got any bones, so it can go into very small holes! An octopus can change colour. It can be red, brown or white. It can hide on rocks. An octopus is very clever. It can open a jar!",
+      "facts": ["An octopus has got eight arms.", "It hasn't got bones.", "It can change colour."],
+      "questions": [
+        { "q": "Where does an octopus live?", "options": ["In the sea", "In the jungle", "On a farm"], "answer": 0 },
+        { "q": "How many arms has it got?", "options": ["Six", "Ten", "Eight"], "answer": 2 },
+        { "q": "Why can it go into small holes?", "options": ["It has no bones", "It can fly", "It is very big"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w2-e2",
+      "title": "Owls",
+      "emoji": "🦉",
+      "text": "Owls are birds. They have got big eyes and soft feathers. Owls can see very well at night. They can turn their heads a long way round! Owls can fly with no sound. They sleep in the day and hunt at night. Many owls live in forests. They eat mice and insects.",
+      "facts": ["Owls can see at night.", "They can turn their heads a long way.", "They fly with no sound."],
+      "questions": [
+        { "q": "When do owls hunt?", "options": ["At night", "In the morning"], "answer": 0 },
+        { "q": "What have owls got?", "options": ["Big eyes", "Eight legs", "A shell"], "answer": 0 },
+        { "q": "What do owls eat?", "options": ["Grass", "Mice and insects", "Fish only"], "answer": 1 }
+      ]
+    }
+  ],
+  "phonics": [
+    { "pattern": "short o", "grapheme": "o", "sound": "/ɒ/", "words": ["dog", "fox", "frog", "box", "hot", "log", "pot"], "distractors": ["cat", "bug", "pig", "net"] },
+    { "pattern": "short u", "grapheme": "u", "sound": "/ʌ/", "words": ["duck", "bug", "sun", "run", "cup", "bus", "jump"], "distractors": ["dog", "hat", "pen", "fish"] },
+    { "pattern": "sh", "grapheme": "sh", "sound": "/ʃ/", "words": ["fish", "shell", "ship", "shop", "dish", "shut", "wish"], "distractors": ["chip", "sun", "fox", "hat"] }
+  ]
+}

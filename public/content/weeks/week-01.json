@@ -1,0 +1,167 @@
+{
+  "id": "week-01",
+  "week": 1,
+  "level": "starters",
+  "title": "Hello, Pip!",
+  "titleTr": "Merhaba Pip!",
+  "theme": "Me and my world",
+  "goals": {
+    "canDo": [
+      "Say my name and age",
+      "Say what I like and don't like",
+      "Name colours and my favourite things",
+      "Talk about my family"
+    ],
+    "grammar": ["be: I am / you are / it is", "like / don't like", "my / your"],
+    "phonics": ["short a", "short e", "short i"]
+  },
+  "vocab": [
+    { "word": "cat", "emoji": "🐱", "tr": "kedi", "phonics": "short a" },
+    { "word": "hat", "emoji": "👒", "tr": "şapka", "phonics": "short a" },
+    { "word": "bag", "emoji": "🎒", "tr": "çanta", "phonics": "short a" },
+    { "word": "map", "emoji": "🗺️", "tr": "harita", "phonics": "short a" },
+    { "word": "dad", "emoji": "👨", "tr": "baba", "phonics": "short a" },
+    { "word": "mum", "emoji": "👩", "tr": "anne", "phonics": "short u" },
+    { "word": "pen", "emoji": "🖊️", "tr": "tükenmez kalem", "phonics": "short e" },
+    { "word": "bed", "emoji": "🛏️", "tr": "yatak", "phonics": "short e" },
+    { "word": "red", "emoji": "🔴", "tr": "kırmızı", "phonics": "short e" },
+    { "word": "ten", "emoji": "🔟", "tr": "on", "phonics": "short e" },
+    { "word": "egg", "emoji": "🥚", "tr": "yumurta", "phonics": "short e" },
+    { "word": "pig", "emoji": "🐷", "tr": "domuz", "phonics": "short i" },
+    { "word": "fish", "emoji": "🐟", "tr": "balık", "phonics": "short i + sh" },
+    { "word": "six", "emoji": "6️⃣", "tr": "altı", "phonics": "short i" },
+    { "word": "pink", "emoji": "🩷", "tr": "pembe", "phonics": "short i" },
+    { "word": "sister", "emoji": "👧", "tr": "kız kardeş", "phonics": "short i" },
+    { "word": "brother", "emoji": "👦", "tr": "erkek kardeş", "phonics": "th" },
+    { "word": "family", "emoji": "👨‍👩‍👧", "tr": "aile", "phonics": "short a" },
+    { "word": "friend", "emoji": "🤝", "tr": "arkadaş", "phonics": "short e" },
+    { "word": "name", "emoji": "📛", "tr": "isim", "phonics": "a_e" },
+    { "word": "blue", "emoji": "🔵", "tr": "mavi", "phonics": "ue" },
+    { "word": "green", "emoji": "🟢", "tr": "yeşil", "phonics": "ee" },
+    { "word": "yellow", "emoji": "🟡", "tr": "sarı", "phonics": "short e" },
+    { "word": "purple", "emoji": "🟣", "tr": "mor", "phonics": "ur" },
+    { "word": "drawing", "emoji": "🖍️", "tr": "resim çizmek", "phonics": "aw" },
+    { "word": "favourite", "emoji": "⭐", "tr": "en sevdiğim", "phonics": "a_e" },
+    { "word": "fox", "emoji": "🦊", "tr": "tilki", "phonics": "short o" },
+    { "word": "home", "emoji": "🏠", "tr": "ev", "phonics": "o_e" }
+  ],
+  "chunks": [
+    { "text": "My name is ...", "tr": "Benim adım ...", "example": "My name is Pip." },
+    { "text": "I'm ... years old.", "tr": "... yaşındayım.", "example": "I'm nine years old." },
+    { "text": "I like ... / I don't like ...", "tr": "... severim / ... sevmem", "example": "I like cats. I don't like eggs." },
+    { "text": "My favourite ... is ...", "tr": "En sevdiğim ... ...", "example": "My favourite colour is purple." },
+    { "text": "This is my ...", "tr": "Bu benim ...", "example": "This is my sister." }
+  ],
+  "talkMissions": [
+    {
+      "id": "w1-t1",
+      "title": "Meet Pip",
+      "titleTr": "Pip ile tanış",
+      "goal": "Child introduces self: name, age, and one thing they like. Pip shares the same about himself and asks one follow-up.",
+      "opener": "Hello! I'm Pip. I'm a fox from planet Zoot. I'm new on Earth. What's your name?",
+      "targets": ["My name is ...", "I'm ... years old.", "I like ..."],
+      "hints": ["My name is ...", "I'm nine years old.", "I like drawing.", "I like cats."]
+    },
+    {
+      "id": "w1-t2",
+      "title": "Colours and favourite things",
+      "titleTr": "Renkler ve en sevdiğin şeyler",
+      "goal": "Child names favourite colour, animal and food, and says one thing they don't like. Pip is surprised by Earth colours and asks what things are that colour.",
+      "opener": "On Zoot, everything is purple! Is Earth purple too? What's your favourite colour?",
+      "targets": ["My favourite ... is ...", "I like ...", "I don't like ..."],
+      "hints": ["My favourite colour is ...", "I like pink.", "I don't like eggs.", "The sky is blue."]
+    },
+    {
+      "id": "w1-t3",
+      "title": "My family",
+      "titleTr": "Ailem",
+      "goal": "Child talks about family members (who, name, one thing they like). Pip talks about his own fox family on Zoot.",
+      "opener": "I have a big fox family on Zoot. My mum is very funny! Tell me about your family. Who is in your family?",
+      "targets": ["This is my ...", "My mum / dad / sister ...", "He likes ... / She likes ..."],
+      "hints": ["This is my dad.", "My mum's name is ...", "I have a ...", "She likes drawing."]
+    }
+  ],
+  "letters": [
+    {
+      "id": "w1-l1",
+      "subject": "Hello from Zoot!",
+      "body": "Dear friend,\nHello! My name is Pip. I am a fox. I am ten years old. I am from planet Zoot. Zoot is very far. On Zoot, the sky is purple and the trees are pink! I like apples and I like drawing. I don't like rain. Now I am on Earth. I want to learn about your world. Can you help me?\nYour new friend,\nPip 🦊",
+      "replyPrompt": "Tell Pip your name, your age and your favourite colour.",
+      "replyPromptTr": "Pip'e adını, yaşını ve en sevdiğin rengi yaz.",
+      "starters": ["Dear Pip,", "My name is", "I am", "My favourite colour is"],
+      "questions": [
+        { "q": "Where is Pip from?", "options": ["Zoot", "Manisa", "Italy"], "answer": 0 },
+        { "q": "What colour is the sky on Zoot?", "options": ["Blue", "Purple", "Green"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w1-l2",
+      "subject": "What is this?",
+      "body": "Dear friend,\nToday I see a small animal. It is black and white. It says \"meow\"! What is it? I think it is a cat. On Zoot, we have no cats. I like cats! Do you like cats? What is your favourite animal?\nLove,\nPip 🦊",
+      "replyPrompt": "Tell Pip your favourite animal. Do you like cats?",
+      "replyPromptTr": "Pip'e en sevdiğin hayvanı yaz. Kedileri sever misin?",
+      "starters": ["Dear Pip,", "Yes, I like", "No, I don't like", "My favourite animal is"],
+      "questions": [
+        { "q": "What animal does Pip see?", "options": ["A dog", "A fish", "A cat"], "answer": 2 },
+        { "q": "Are there cats on Zoot?", "options": ["Yes", "No"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w1-l3",
+      "subject": "My fox family",
+      "body": "Dear friend,\nThis is my family. My mum's name is Lila. She is funny. My dad's name is Rok. He likes fish. I have a sister. Her name is Mimi. She is six. She likes pink! I miss my family. Tell me about your family, please.\nPip 🦊",
+      "replyPrompt": "Tell Pip about your family. Who is in your family? What do they like?",
+      "replyPromptTr": "Pip'e aileni anlat. Ailende kimler var? Neleri severler?",
+      "starters": ["Dear Pip,", "This is my", "My mum's name is", "He likes", "She likes"],
+      "questions": [
+        { "q": "What does Pip's dad like?", "options": ["Fish", "Apples", "Pink"], "answer": 0 },
+        { "q": "How old is Mimi?", "options": ["Ten", "Six", "Nine"], "answer": 1 }
+      ]
+    }
+  ],
+  "story": {
+    "title": "My home",
+    "prompt": "Draw your home and the people and animals who live there.",
+    "promptTr": "Evini ve orada yaşayan insanları, hayvanları çiz.",
+    "pages": [
+      { "prompt": "Draw your home. What colour is it?", "promptTr": "Evini çiz. Ne renk?", "starters": ["This is my home.", "It is ..."] },
+      { "prompt": "Who lives in your home?", "promptTr": "Evinde kimler yaşıyor?", "starters": ["This is my ...", "My ... is ..."] },
+      { "prompt": "What do you like in your home?", "promptTr": "Evinde neyi seviyorsun?", "starters": ["I like my ...", "My favourite ... is ..."] }
+    ]
+  },
+  "explorer": [
+    {
+      "id": "w1-e1",
+      "title": "Foxes",
+      "emoji": "🦊",
+      "text": "Foxes are small wild animals. They have red or orange fur and a big tail. Foxes have big ears. They can hear very well. Foxes live in forests, in fields and in some cities too! They sleep in the day and look for food at night. Foxes eat mice, insects and fruit.",
+      "facts": ["Foxes have big ears.", "A fox's tail is very big.", "Foxes look for food at night."],
+      "questions": [
+        { "q": "What colour is a fox?", "options": ["Blue", "Red or orange", "Green"], "answer": 1 },
+        { "q": "When do foxes look for food?", "options": ["At night", "In the morning"], "answer": 0 },
+        { "q": "What do foxes eat?", "options": ["Pizza", "Mice and fruit", "Grass only"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w1-e2",
+      "title": "Rainbow colours",
+      "emoji": "🌈",
+      "text": "A rainbow has seven colours: red, orange, yellow, green, blue, indigo and violet. You can see a rainbow when there is sun and rain at the same time. The sun shines through the rain drops. Then the light breaks into colours. You can make a small rainbow with water and a torch!",
+      "facts": ["A rainbow has seven colours.", "You need sun and rain.", "Red is at the top."],
+      "questions": [
+        { "q": "How many colours has a rainbow got?", "options": ["Three", "Seven", "Ten"], "answer": 1 },
+        { "q": "When can you see a rainbow?", "options": ["Sun and rain", "Only at night", "Only in snow"], "answer": 0 },
+        { "q": "Which colour is in a rainbow?", "options": ["Black", "Green", "Brown"], "answer": 1 }
+      ]
+    }
+  ],
+  "phonics": [
+    { "pattern": "short a", "grapheme": "a", "sound": "/æ/", "words": ["cat", "hat", "bag", "map", "dad", "fan", "jam"], "distractors": ["pen", "pig", "dog", "sun"] },
+    { "pattern": "short e", "grapheme": "e", "sound": "/e/", "words": ["pen", "bed", "red", "ten", "egg", "leg", "net"], "distractors": ["cat", "pig", "cup", "box"] },
+    { "pattern": "short i", "grapheme": "i", "sound": "/ɪ/", "words": ["pig", "six", "sit", "big", "pin", "lip", "milk"], "distractors": ["hat", "bed", "fox", "bus"] }
+  ],
+  "assessment": {
+    "pictureTask": "Look at the picture and tell Pip what you can see. What animals and colours can you see? What is the girl doing?",
+    "pictureEmoji": "🏞️🦊🐦🌳☀️👧"
+  }
+}
