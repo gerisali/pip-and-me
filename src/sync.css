@@ -1,0 +1,14 @@
+/* ---------- sync & roles ---------- */
+.sync-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--card); border-radius: 16px; padding: 8px 12px; margin: 6px 0 10px; box-shadow: var(--shadow); font-size: 0.9rem; font-weight: 600; }
+.sync-bar .btn { margin-left: auto; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+.dot.ok { background: var(--ok); box-shadow: 0 0 0 4px var(--ok-bg); }
+.dot.bad { background: var(--no); box-shadow: 0 0 0 4px var(--no-bg); }
+.role-btn { display: flex; align-items: center; gap: 14px; text-align: left; border: 2px solid var(--line); background: #fff; border-radius: var(--radius); padding: 16px; cursor: pointer; font-size: 1.05rem; }
+.role-btn b { display: block; font-family: var(--font-display); font-size: 1.2rem; }
+.role-btn .tiny { display: block; font-weight: 600; }
+.role-btn:active { transform: scale(0.98); }
+.reset-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+@media (max-width: 600px) { .reset-opts { grid-template-columns: 1fr; } }
+.reset-opts .btn { flex-direction: column; align-items: flex-start; text-align: left; border-radius: 18px; padding: 12px 14px; gap: 4px; }
+.danger-btn { background: #fff0ee; color: #b2382e; }
