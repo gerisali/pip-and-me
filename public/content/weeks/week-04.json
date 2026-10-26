@@ -1,0 +1,169 @@
+{
+  "id": "week-04",
+  "week": 4,
+  "level": "movers",
+  "title": "Little artist",
+  "titleTr": "Küçük sanatçı",
+  "theme": "Art, shapes and materials; making my first storybook",
+  "goals": {
+    "canDo": [
+      "Say what I am doing now",
+      "Ask 'What are you doing?'",
+      "Describe a picture: shapes, colours, where things are",
+      "Ask for things politely: 'Can you pass me the ...?'",
+      "Tell a short story with my drawings"
+    ],
+    "grammar": ["present continuous: I'm drawing / she's painting", "What are you doing?", "It looks like ...", "in / on / under / next to"],
+    "phonics": ["ee", "ea", "oo"]
+  },
+  "vocab": [
+    { "word": "draw", "emoji": "✏️", "tr": "çizmek", "phonics": "aw" },
+    { "word": "paint", "emoji": "🎨", "tr": "boyamak", "phonics": "ai" },
+    { "word": "colour", "emoji": "🖍️", "tr": "renk / boyamak", "phonics": "short o" },
+    { "word": "picture", "emoji": "🖼️", "tr": "resim", "phonics": "short i" },
+    { "word": "paper", "emoji": "📄", "tr": "kağıt", "phonics": "a" },
+    { "word": "pencil", "emoji": "✏️", "tr": "kurşun kalem", "phonics": "short e" },
+    { "word": "crayon", "emoji": "🖍️", "tr": "pastel boya", "phonics": "ay" },
+    { "word": "brush", "emoji": "🖌️", "tr": "fırça", "phonics": "sh" },
+    { "word": "glue", "emoji": "🧴", "tr": "yapıştırıcı", "phonics": "ue" },
+    { "word": "scissors", "emoji": "✂️", "tr": "makas", "phonics": "short i" },
+    { "word": "circle", "emoji": "⭕", "tr": "daire", "phonics": "ir" },
+    { "word": "square", "emoji": "🟥", "tr": "kare", "phonics": "are" },
+    { "word": "triangle", "emoji": "🔺", "tr": "üçgen", "phonics": "i" },
+    { "word": "star", "emoji": "⭐", "tr": "yıldız", "phonics": "ar" },
+    { "word": "line", "emoji": "➖", "tr": "çizgi", "phonics": "i_e" },
+    { "word": "tree", "emoji": "🌳", "tr": "ağaç", "phonics": "ee" },
+    { "word": "sea", "emoji": "🌊", "tr": "deniz", "phonics": "ea" },
+    { "word": "moon", "emoji": "🌙", "tr": "ay", "phonics": "oo" },
+    { "word": "book", "emoji": "📖", "tr": "kitap", "phonics": "oo" },
+    { "word": "story", "emoji": "📚", "tr": "hikâye", "phonics": "or" },
+    { "word": "beautiful", "emoji": "🌸", "tr": "güzel", "phonics": "eau" },
+    { "word": "funny", "emoji": "😄", "tr": "komik", "phonics": "short u" },
+    { "word": "big", "emoji": "🐘", "tr": "büyük", "phonics": "short i" },
+    { "word": "small", "emoji": "🐭", "tr": "küçük", "phonics": "all" },
+    { "word": "next to", "emoji": "↔️", "tr": "yanında", "phonics": "short e" },
+    { "word": "under", "emoji": "⬇️", "tr": "altında", "phonics": "short u" },
+    { "word": "in", "emoji": "📦", "tr": "içinde", "phonics": "short i" },
+    { "word": "on", "emoji": "🔝", "tr": "üstünde", "phonics": "short o" }
+  ],
+  "chunks": [
+    { "text": "I'm drawing ...", "tr": "... çiziyorum.", "example": "I'm drawing a big tree." },
+    { "text": "What are you doing?", "tr": "Ne yapıyorsun?", "example": "What are you doing, Pip? I'm painting the sea." },
+    { "text": "It looks like ...", "tr": "... gibi görünüyor.", "example": "It looks like a cat!" },
+    { "text": "Can you pass me the ..., please?", "tr": "... uzatabilir misin, lütfen?", "example": "Can you pass me the glue, please?" },
+    { "text": "There is a ... next to / under the ...", "tr": "...nın yanında / altında bir ... var.", "example": "There is a cat under the tree." }
+  ],
+  "talkMissions": [
+    {
+      "id": "w4-t1",
+      "title": "What are you doing?",
+      "titleTr": "Ne yapıyorsun?",
+      "goal": "Present continuous in real time. The child draws something while talking; Pip asks 'What are you doing? What are you drawing now?' and the child narrates. Pip also narrates what he is 'doing' (painting the Zoot sky).",
+      "opener": "I'm painting a picture of Zoot. I'm painting the purple sky now! What are you doing? Are you drawing too?",
+      "targets": ["I'm drawing ...", "I'm colouring ...", "What are you doing?"],
+      "hints": ["I'm drawing a cat.", "I'm colouring the sky blue.", "What are you doing, Pip?", "I'm painting a tree."]
+    },
+    {
+      "id": "w4-t2",
+      "title": "Picture detective",
+      "titleTr": "Resim dedektifi",
+      "goal": "Child describes a picture she drew (shapes, colours, where things are with in/on/under/next to). Pip 'can't see it' and asks questions to draw it himself; he makes a funny mistake so she must correct him.",
+      "opener": "Oh no, I can't see your picture! Tell me about it, please. I want to draw it too. What can you see in your picture?",
+      "targets": ["There is a ... next to / under the ...", "It looks like ...", "It's ... (colour / shape)"],
+      "hints": ["There is a house next to a tree.", "The sun is yellow.", "There is a cat under the table.", "It looks like a star."]
+    },
+    {
+      "id": "w4-t3",
+      "title": "Our storybook",
+      "titleTr": "Hikâye kitabımız",
+      "goal": "Plan the 4-page storybook together: who is the hero, where it happens, what problem, how it ends. Child gives ideas, Pip adds one idea and asks 'What happens next?'.",
+      "opener": "Let's make a storybook together! Every story needs a hero. Who is the hero of our story?",
+      "targets": ["The hero is ...", "He / She lives in ...", "Then ...", "At the end ..."],
+      "hints": ["The hero is a small cat.", "She lives in a big forest.", "Then she meets a fox.", "At the end they are friends."]
+    }
+  ],
+  "letters": [
+    {
+      "id": "w4-l1",
+      "subject": "Earth is beautiful!",
+      "body": "Dear friend,\nI am sitting under a big tree now. I am drawing the sea. The sea is blue and green, and there are white boats on it. A little bird is looking at my picture. It is very funny! On Zoot I draw with moon rocks. On Earth I draw with crayons. What do you draw with?\nPip 🦊",
+      "replyPrompt": "Tell Pip what you are doing now. What do you like to draw with?",
+      "replyPromptTr": "Pip'e şu anda ne yaptığını yaz. Resim çizerken neyi kullanmayı seversin?",
+      "starters": ["Dear Pip,", "Now I am", "I like drawing with", "My favourite picture is"],
+      "questions": [
+        { "q": "Where is Pip sitting?", "options": ["Under a tree", "On a boat", "In a house"], "answer": 0 },
+        { "q": "What is Pip drawing?", "options": ["The moon", "The sea", "A cat"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w4-l2",
+      "subject": "A shape monster",
+      "body": "Dear friend,\nToday I am making a monster with shapes! Its head is a big circle. Its eyes are two small triangles. Its body is a square and its legs are long lines. It has got a star on its tummy. It looks like a robot! Can you make a shape monster too? Tell me about it.\nPip 🦊",
+      "replyPrompt": "Draw a shape monster and tell Pip about it. What shapes and colours are in it?",
+      "replyPromptTr": "Şekillerden bir canavar çiz ve Pip'e anlat. Hangi şekiller ve renkler var?",
+      "starters": ["Dear Pip,", "My monster's head is", "Its eyes are", "It has got", "It looks like"],
+      "questions": [
+        { "q": "What shape is the monster's head?", "options": ["A square", "A circle", "A triangle"], "answer": 1 },
+        { "q": "What is on its tummy?", "options": ["A star", "A moon", "A line"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w4-l3",
+      "subject": "Help me, please!",
+      "body": "Dear friend,\nI am making a book for my sister Mimi. But I have got a problem. I can't find my scissors and my glue! Are they under the bed? No. Are they in my bag? No! Oh, they are next to the window. Now I am cutting and gluing. Are you making a storybook too? What is it about?\nPip 🦊",
+      "replyPrompt": "Tell Pip about your storybook. Who is the hero? What happens?",
+      "replyPromptTr": "Pip'e hikâye kitabını anlat. Kahraman kim? Neler oluyor?",
+      "starters": ["Dear Pip,", "Yes, I am making", "The hero is", "In my story", "At the end"],
+      "questions": [
+        { "q": "What can't Pip find?", "options": ["His crayons", "His scissors and glue", "His book"], "answer": 1 },
+        { "q": "Where are they?", "options": ["Under the bed", "In his bag", "Next to the window"], "answer": 2 }
+      ]
+    }
+  ],
+  "story": {
+    "title": "My first storybook",
+    "prompt": "Make a 4-page storybook with your own drawings. Who is the hero? What happens?",
+    "promptTr": "Kendi çizimlerinle 4 sayfalık bir hikâye kitabı yap. Kahraman kim? Neler oluyor?",
+    "pages": [
+      { "prompt": "Page 1: Who is the hero? Where does he or she live?", "promptTr": "Sayfa 1: Kahraman kim? Nerede yaşıyor?", "starters": ["This is ...", "She lives in ...", "He's got ..."] },
+      { "prompt": "Page 2: What is the hero doing one day?", "promptTr": "Sayfa 2: Bir gün kahraman ne yapıyor?", "starters": ["One day ...", "She is ...ing ..."] },
+      { "prompt": "Page 3: Oh no! What is the problem?", "promptTr": "Sayfa 3: Eyvah! Sorun ne?", "starters": ["Oh no!", "She can't ...", "There is a ..."] },
+      { "prompt": "Page 4: How does the story end?", "promptTr": "Sayfa 4: Hikâye nasıl bitiyor?", "starters": ["Then ...", "At the end ...", "Now they are ..."] }
+    ]
+  },
+  "explorer": [
+    {
+      "id": "w4-e1",
+      "title": "Mixing colours",
+      "emoji": "🎨",
+      "text": "Red, yellow and blue are primary colours. You can't make them with other colours. But you can mix them! Red and yellow make orange. Blue and yellow make green. Red and blue make purple. Artists mix colours on a palette. Try it with your paints!",
+      "facts": ["Red, yellow and blue are primary colours.", "Blue and yellow make green.", "Red and blue make purple."],
+      "questions": [
+        { "q": "What do red and yellow make?", "options": ["Green", "Orange", "Purple"], "answer": 1 },
+        { "q": "Which is a primary colour?", "options": ["Blue", "Pink", "Brown"], "answer": 0 },
+        { "q": "What do red and blue make?", "options": ["Purple", "Orange", "Grey"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w4-e2",
+      "title": "Animal artists",
+      "emoji": "🐦",
+      "text": "Some animals are artists too! The bowerbird lives in Australia. The boy bird makes a little house with sticks. Then he puts blue things next to it: flowers, shells and stones. He wants a girl bird to like his house. Pufferfish draw big circles in the sand under the sea. They look like beautiful pictures!",
+      "facts": ["Bowerbirds collect blue things.", "Pufferfish draw circles in the sand.", "Bowerbirds live in Australia."],
+      "questions": [
+        { "q": "Where does the bowerbird live?", "options": ["In Australia", "In Turkey", "On Zoot"], "answer": 0 },
+        { "q": "What colour things does the bowerbird like?", "options": ["Red", "Blue", "Black"], "answer": 1 },
+        { "q": "What does the pufferfish draw?", "options": ["Circles in the sand", "Squares on rocks", "Lines in the sky"], "answer": 0 }
+      ]
+    }
+  ],
+  "phonics": [
+    { "pattern": "ee", "grapheme": "ee", "sound": "/iː/", "words": ["tree", "see", "bee", "feet", "green", "sheep", "sleep"], "distractors": ["bed", "pen", "moon", "fish"] },
+    { "pattern": "ea", "grapheme": "ea", "sound": "/iː/", "words": ["sea", "tea", "eat", "read", "leaf", "meat", "beach"], "distractors": ["net", "cat", "book", "sun"] },
+    { "pattern": "oo", "grapheme": "oo", "sound": "/uː/ /ʊ/", "words": ["moon", "zoo", "food", "spoon", "book", "look", "cook"], "distractors": ["dog", "sea", "cup", "box"] }
+  ],
+  "assessment": {
+    "pictureTask": "Look at the picture and tell Pip what you can see. What animals and colours can you see? What is the girl doing?",
+    "pictureEmoji": "🏞️🦊🐦🌳☀️👧"
+  }
+}

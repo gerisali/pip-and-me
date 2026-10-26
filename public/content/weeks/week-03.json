@@ -1,0 +1,164 @@
+{
+  "id": "week-03",
+  "week": 3,
+  "level": "movers",
+  "title": "A day with Pip",
+  "titleTr": "Pip'le bir gün",
+  "theme": "Daily routines, time and days of the week",
+  "goals": {
+    "canDo": [
+      "Say what I do every day and at what time",
+      "Say what I do on different days",
+      "Ask 'What time do you ...?'",
+      "Say what someone else does (he/she + -s)"
+    ],
+    "grammar": ["present simple: I get up / she gets up", "What time do you ...? At ... o'clock.", "On Mondays I ...", "before / after"],
+    "phonics": ["ch", "th", "ck"]
+  },
+  "vocab": [
+    { "word": "get up", "emoji": "⏰", "tr": "kalkmak", "phonics": "short e" },
+    { "word": "wash", "emoji": "🧼", "tr": "yıkamak", "phonics": "sh" },
+    { "word": "breakfast", "emoji": "🥣", "tr": "kahvaltı", "phonics": "ea" },
+    { "word": "lunch", "emoji": "🥪", "tr": "öğle yemeği", "phonics": "ch" },
+    { "word": "dinner", "emoji": "🍽️", "tr": "akşam yemeği", "phonics": "short i" },
+    { "word": "school", "emoji": "🏫", "tr": "okul", "phonics": "oo" },
+    { "word": "teacher", "emoji": "🧑‍🏫", "tr": "öğretmen", "phonics": "ch" },
+    { "word": "homework", "emoji": "📝", "tr": "ödev", "phonics": "o_e" },
+    { "word": "o'clock", "emoji": "🕒", "tr": "saat (tam)", "phonics": "ck" },
+    { "word": "morning", "emoji": "🌅", "tr": "sabah", "phonics": "or" },
+    { "word": "afternoon", "emoji": "🌤️", "tr": "öğleden sonra", "phonics": "oo" },
+    { "word": "evening", "emoji": "🌆", "tr": "akşam", "phonics": "e" },
+    { "word": "night", "emoji": "🌙", "tr": "gece", "phonics": "igh" },
+    { "word": "Monday", "emoji": "📅", "tr": "Pazartesi", "phonics": "short u" },
+    { "word": "Saturday", "emoji": "🎉", "tr": "Cumartesi", "phonics": "short a" },
+    { "word": "Sunday", "emoji": "☀️", "tr": "Pazar", "phonics": "short u" },
+    { "word": "week", "emoji": "🗓️", "tr": "hafta", "phonics": "ee" },
+    { "word": "sleep", "emoji": "😴", "tr": "uyumak", "phonics": "ee" },
+    { "word": "brush", "emoji": "🪥", "tr": "fırçalamak", "phonics": "sh" },
+    { "word": "teeth", "emoji": "🦷", "tr": "dişler", "phonics": "th" },
+    { "word": "bath", "emoji": "🛁", "tr": "banyo", "phonics": "th" },
+    { "word": "chicken", "emoji": "🍗", "tr": "tavuk", "phonics": "ch + ck" },
+    { "word": "chips", "emoji": "🍟", "tr": "patates kızartması", "phonics": "ch" },
+    { "word": "clock", "emoji": "🕰️", "tr": "saat", "phonics": "ck" },
+    { "word": "park", "emoji": "🛝", "tr": "park", "phonics": "ar" },
+    { "word": "always", "emoji": "🔁", "tr": "her zaman", "phonics": "al" },
+    { "word": "sometimes", "emoji": "🔀", "tr": "bazen", "phonics": "o_e" },
+    { "word": "never", "emoji": "🚫", "tr": "asla", "phonics": "short e" }
+  ],
+  "chunks": [
+    { "text": "I get up at ...", "tr": "Saat ...'da kalkarım.", "example": "I get up at seven o'clock." },
+    { "text": "On Mondays I ...", "tr": "Pazartesileri ...", "example": "On Saturdays I go to the park." },
+    { "text": "What time do you ...?", "tr": "Saat kaçta ...?", "example": "What time do you go to bed?" },
+    { "text": "After school I ...", "tr": "Okuldan sonra ...", "example": "After school I do my homework." },
+    { "text": "He/She ...s every day.", "tr": "O her gün ...", "example": "My mum drinks tea every day." }
+  ],
+  "talkMissions": [
+    {
+      "id": "w3-t1",
+      "title": "My morning",
+      "titleTr": "Benim sabahım",
+      "goal": "Child describes her morning routine in order with times (get up, wash, breakfast, school). Pip compares with his Zoot routine (he gets up at night!) and asks 'What time do you ...?'.",
+      "opener": "On Zoot, I get up at night and sleep in the day! It's very funny. What time do you get up?",
+      "targets": ["I get up at ...", "Then I ...", "What time do you ...?"],
+      "hints": ["I get up at seven o'clock.", "Then I have breakfast.", "I go to school at eight.", "What time do you get up, Pip?"]
+    },
+    {
+      "id": "w3-t2",
+      "title": "My week",
+      "titleTr": "Benim haftam",
+      "goal": "Child talks about different days: school days vs weekend, one activity per day, using 'On Mondays I ...' and frequency words. Pip asks about her favourite day and why.",
+      "opener": "On Zoot, there are no days, only one long day! On Earth you have Monday, Tuesday... What do you do on Saturdays?",
+      "targets": ["On ... I ...", "My favourite day is ...", "I always / sometimes / never ..."],
+      "hints": ["On Saturdays I go to the park.", "My favourite day is Sunday.", "I sometimes draw.", "I never get up early on Sunday!"]
+    },
+    {
+      "id": "w3-t3",
+      "title": "Who does what?",
+      "titleTr": "Kim ne yapar?",
+      "goal": "Child talks about family members' routines using he/she + verb-s (My dad drinks coffee, My mum works...). Pip recasts missing -s naturally. Pip also describes his sister Mimi's day.",
+      "opener": "My sister Mimi gets up very early. She eats apples and she plays all day! What does your mum do every day?",
+      "targets": ["My mum ...s", "My dad ...s", "He / She ...s every day."],
+      "hints": ["My dad drinks coffee.", "My mum goes to work.", "She reads books.", "He cooks dinner."]
+    }
+  ],
+  "letters": [
+    {
+      "id": "w3-l1",
+      "subject": "My day on Earth",
+      "body": "Dear friend,\nHere is my day on Earth. I get up at seven o'clock. I wash my face and I brush my teeth. Then I have breakfast. I love toast and honey! In the morning I go to the park and I watch the birds. In the afternoon I read books about Earth. I go to bed at nine o'clock. What do you do every day?\nPip 🦊",
+      "replyPrompt": "Tell Pip about your day. What time do you get up? What do you do after school?",
+      "replyPromptTr": "Pip'e gününü anlat. Saat kaçta kalkıyorsun? Okuldan sonra ne yapıyorsun?",
+      "starters": ["Dear Pip,", "I get up at", "Then I", "After school I", "I go to bed at"],
+      "questions": [
+        { "q": "What time does Pip get up?", "options": ["At six o'clock", "At seven o'clock", "At nine o'clock"], "answer": 1 },
+        { "q": "What does Pip do in the afternoon?", "options": ["He reads books", "He swims", "He goes to school"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w3-l2",
+      "subject": "Mimi's day",
+      "body": "Dear friend,\nMy sister Mimi is on Zoot. She sends me a letter every week. Mimi gets up very early. She has breakfast with Mum. She goes to fox school. Her teacher's name is Mr Tok. After school she plays with her friends and she draws pictures. She never does her homework! Does your friend do her homework?\nPip 🦊",
+      "replyPrompt": "Tell Pip about a friend or a family member. What does he or she do every day?",
+      "replyPromptTr": "Pip'e bir arkadaşını ya da aileden birini anlat. O her gün neler yapıyor?",
+      "starters": ["Dear Pip,", "My friend's name is", "She gets up at", "He likes", "Every day she"],
+      "questions": [
+        { "q": "Who is Mr Tok?", "options": ["Mimi's teacher", "Pip's dad", "A bird"], "answer": 0 },
+        { "q": "What does Mimi do after school?", "options": ["She sleeps", "She plays and draws", "She cooks"], "answer": 1 }
+      ]
+    },
+    {
+      "id": "w3-l3",
+      "subject": "My favourite day",
+      "body": "Dear friend,\nI have a new favourite day. It is Saturday! On Saturdays there is no school for children. The park is full of children and dogs. I sometimes play ball with them. In the evening I eat chicken and chips. Yum! What is your favourite day? Why?\nPip 🦊",
+      "replyPrompt": "Tell Pip your favourite day and why. What do you do on that day?",
+      "replyPromptTr": "Pip'e en sevdiğin günü ve nedenini yaz. O gün neler yapıyorsun?",
+      "starters": ["Dear Pip,", "My favourite day is", "because", "On ... I", "In the evening I"],
+      "questions": [
+        { "q": "What is Pip's favourite day?", "options": ["Monday", "Saturday", "Sunday"], "answer": 1 },
+        { "q": "What does Pip eat in the evening?", "options": ["Chicken and chips", "Fish", "Apples"], "answer": 0 }
+      ]
+    }
+  ],
+  "story": {
+    "title": "A day in my life",
+    "prompt": "Make a comic: draw four moments of your day.",
+    "promptTr": "Bir çizgi roman yap: gününden dört anı çiz.",
+    "pages": [
+      { "prompt": "Morning: what do you do in the morning?", "promptTr": "Sabah: sabahları ne yapıyorsun?", "starters": ["I get up at ...", "I have ... for breakfast."] },
+      { "prompt": "School: what do you do at school?", "promptTr": "Okul: okulda neler yapıyorsun?", "starters": ["At school I ...", "My teacher ..."] },
+      { "prompt": "Afternoon: what do you do after school?", "promptTr": "Öğleden sonra: okuldan sonra ne yapıyorsun?", "starters": ["After school I ...", "I sometimes ..."] },
+      { "prompt": "Evening: what do you do before bed?", "promptTr": "Akşam: yatmadan önce ne yapıyorsun?", "starters": ["In the evening I ...", "I go to bed at ..."] }
+    ]
+  },
+  "explorer": [
+    {
+      "id": "w3-e1",
+      "title": "Animals of the night",
+      "emoji": "🌙",
+      "text": "Some animals sleep in the day and wake up at night. We call them nocturnal animals. Owls, bats and foxes are nocturnal. They have got very good eyes or ears. Bats can't see well, but they can hear very well. They make a sound and listen. Then they know where things are!",
+      "facts": ["Nocturnal animals are awake at night.", "Bats find things with sound.", "Owls and foxes are nocturnal."],
+      "questions": [
+        { "q": "When do nocturnal animals sleep?", "options": ["In the day", "At night"], "answer": 0 },
+        { "q": "How do bats find things?", "options": ["With their eyes", "With sound", "With their tail"], "answer": 1 },
+        { "q": "Which animal is nocturnal?", "options": ["An owl", "A sheep", "A duck"], "answer": 0 }
+      ]
+    },
+    {
+      "id": "w3-e2",
+      "title": "How a clock works",
+      "emoji": "🕰️",
+      "text": "A clock has got two hands. The short hand shows the hour. The long hand shows the minutes. When the long hand is on twelve, we say \"o'clock\". There are sixty minutes in one hour and twenty-four hours in one day. Long ago, people used the sun to tell the time!",
+      "facts": ["The short hand shows the hour.", "There are 60 minutes in an hour.", "There are 24 hours in a day."],
+      "questions": [
+        { "q": "What does the long hand show?", "options": ["The hour", "The minutes", "The day"], "answer": 1 },
+        { "q": "How many hours are in one day?", "options": ["Twelve", "Sixty", "Twenty-four"], "answer": 2 },
+        { "q": "What did people use long ago?", "options": ["The sun", "A phone", "A computer"], "answer": 0 }
+      ]
+    }
+  ],
+  "phonics": [
+    { "pattern": "ch", "grapheme": "ch", "sound": "/tʃ/", "words": ["chip", "chin", "chop", "lunch", "much", "rich", "chicken"], "distractors": ["ship", "fish", "thin", "duck"] },
+    { "pattern": "th", "grapheme": "th", "sound": "/θ/", "words": ["thin", "bath", "teeth", "with", "maths", "three", "moth"], "distractors": ["tin", "bat", "chin", "sock"] },
+    { "pattern": "ck", "grapheme": "ck", "sound": "/k/", "words": ["duck", "clock", "sock", "back", "neck", "kick", "rock"], "distractors": ["dog", "chip", "bath", "sun"] }
+  ]
+}
