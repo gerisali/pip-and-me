@@ -1,30 +1,49 @@
 import { ttsBlob } from './api.js';
 
 // ---------- speaking (TTS) ----------
+// - Only the newest speak() call may play: older calls still waiting for audio are dropped (no "late" voices).
+// - Calling speak() again with the same text while it is loading/playing does nothing (no restart on repeated taps).
+// - prefetch() warms the cache so words play instantly.
 let audioEl = null;
 let unlocked = false;
 let ttsMode = 'openai'; // set from /api/health: 'openai' | 'browser'
 let voiceOpts = {}; // { voice, persona } from settings
+const cache = new Map(); // text -> object URL
+const inflight = new Map(); // text -> Promise<url|null>
+const MAX_CACHE = 250;
+
 export function setVoice(v) {
-  voiceOpts = v || {};
+  const next = v || {};
+  if (JSON.stringify(next) === JSON.stringify(voiceOpts)) return;
+  voiceOpts = next;
+  cache.forEach((u) => URL.revokeObjectURL(u));
   cache.clear();
 }
-const cache = new Map(); // text -> object URL
-const listeners = new Set();
-let speaking = false;
-
 export function setTtsMode(m) {
   ttsMode = m;
 }
+
+// state: 'idle' | 'loading' | 'playing'
+let state = 'idle';
+const listeners = new Set();
+const stateListeners = new Set();
+function setState(s) {
+  if (s === state) return;
+  const wasPlaying = state === 'playing';
+  state = s;
+  stateListeners.forEach((f) => f(s));
+  if (wasPlaying !== (s === 'playing')) listeners.forEach((f) => f(s === 'playing'));
+}
+// "talking" (mouth animation) = actually playing
 export function onSpeakingChange(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
-function setSpeaking(v) {
-  speaking = v;
-  listeners.forEach((f) => f(v));
+export function onTtsState(fn) {
+  stateListeners.add(fn);
+  return () => stateListeners.delete(fn);
 }
-export const isSpeaking = () => speaking;
+export const isSpeaking = () => state === 'playing';
 
 // iPad Safari only plays audio started from a tap. Call this inside the first tap handler.
 export function unlockAudio() {
@@ -56,45 +75,109 @@ function browserSpeak(text, rate = 0.9) {
   });
 }
 
-export async function speak(text, { rate } = {}) {
-  if (!text) return;
-  stopSpeaking();
-  setSpeaking(true);
-  try {
-    if (ttsMode === 'openai') {
-      let url = cache.get(text);
-      if (!url) {
-        const blob = await ttsBlob(text, voiceOpts);
-        if (blob) {
-          url = URL.createObjectURL(blob);
-          cache.set(text, url);
-        }
-      }
-      if (url) {
-        audioEl = audioEl || new Audio();
-        audioEl.src = url;
-        audioEl.playbackRate = rate && rate < 1 ? 0.85 : 1;
-        await new Promise((resolve) => {
-          audioEl.onended = audioEl.onerror = audioEl.onpause = () => resolve();
-          audioEl.play().catch(() => resolve());
-        });
-        return;
-      }
-    }
-    await browserSpeak(text, rate || 0.9);
-  } finally {
-    setSpeaking(false);
+function remember(text, url) {
+  cache.set(text, url);
+  if (cache.size > MAX_CACHE) {
+    const [k, u] = cache.entries().next().value;
+    cache.delete(k);
+    URL.revokeObjectURL(u);
   }
 }
 
+function getUrl(text) {
+  if (cache.has(text)) return Promise.resolve(cache.get(text));
+  if (inflight.has(text)) return inflight.get(text);
+  const p = ttsBlob(text, voiceOpts)
+    .then((blob) => {
+      if (!blob) return null;
+      const url = URL.createObjectURL(blob);
+      remember(text, url);
+      return url;
+    })
+    .catch(() => null)
+    .finally(() => inflight.delete(text));
+  inflight.set(text, p);
+  return p;
+}
+
+// Warm the cache in the background (2 at a time).
+export function prefetch(texts) {
+  if (ttsMode !== 'openai') return;
+  const list = [...new Set((texts || []).filter(Boolean))].filter((t) => !cache.has(t) && !inflight.has(t)).slice(0, 60);
+  let i = 0;
+  const worker = async () => {
+    while (i < list.length) await getUrl(list[i++]);
+  };
+  worker();
+  worker();
+}
+
+let gen = 0;
+let current = null; // { text, rate, promise }
+let endCurrent = null; // resolves the playing promise when stopped
+
+export function speak(text, { rate } = {}) {
+  if (!text) return Promise.resolve();
+  if (current && current.text === text && current.rate === rate) return current.promise;
+  stopSpeaking();
+  const my = ++gen;
+  const promise = (async () => {
+    try {
+      if (ttsMode === 'openai') {
+        setState('loading');
+        const url = await getUrl(text);
+        if (my !== gen) return; // a newer speak/stop happened while we waited
+        if (url) {
+          audioEl = audioEl || new Audio();
+          audioEl.src = url;
+          audioEl.defaultPlaybackRate = audioEl.playbackRate = rate && rate < 1 ? 0.85 : 1;
+          setState('playing');
+          // no 'pause' listener: a late pause event from the previous clip would end this one early
+          await new Promise((resolve) => {
+            endCurrent = resolve;
+            audioEl.onended = audioEl.onerror = () => resolve();
+            audioEl.play().catch(() => resolve());
+          });
+          return;
+        }
+      }
+      if (my !== gen) return;
+      setState('playing');
+      await browserSpeak(text, rate || 0.9);
+    } finally {
+      if (my === gen) {
+        current = null;
+        setState('idle');
+      }
+    }
+  })();
+  current = { text, rate, promise };
+  return promise;
+}
+
 export function stopSpeaking() {
+  gen++;
+  current = null;
+  if (endCurrent) {
+    endCurrent();
+    endCurrent = null;
+  }
   try {
     if (audioEl && !audioEl.paused) audioEl.pause();
   } catch {}
   try {
     window.speechSynthesis?.cancel();
   } catch {}
-  setSpeaking(false);
+  setState('idle');
+}
+
+// Resolves when nothing is loading or playing (or after maxMs).
+export function waitIdle(maxMs = 6000) {
+  return new Promise((resolve) => {
+    const t0 = Date.now();
+    const tick = () => (state === 'idle' || Date.now() - t0 > maxMs ? resolve() : setTimeout(tick, 100));
+    tick();
+  });
 }
 
 // ---------- listening (recording) ----------

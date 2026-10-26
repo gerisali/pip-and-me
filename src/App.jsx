@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { loadPacks, currentPack, getSettings, saveSettings, withCharacterName, getCharacterImages } from './lib/content.js';
 import { ensureWords } from './lib/learner.js';
 import { health, setCode } from './lib/api.js';
-import { setTtsMode, setVoice, unlockAudio, stopSpeaking } from './lib/audio.js';
+import { setTtsMode, setVoice, unlockAudio, stopSpeaking, onTtsState } from './lib/audio.js';
 import { persist, kv, setRole } from './lib/db.js';
 import { setCloud, syncNow, startAutoSync, onSynced } from './lib/sync.js';
 import Home from './screens/Home.jsx';
@@ -90,8 +90,29 @@ export default function App() {
         <div className="screen-anim" key={screenKey}>
           <S {...screenProps} />
         </div>
+        <TtsPill />
       </div>
     </Ctx.Provider>
+  );
+}
+
+// Small "getting the voice ready" hint while speech is being fetched (shows only if it takes > 250 ms).
+function TtsPill() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    let t = null;
+    const off = onTtsState((st) => {
+      clearTimeout(t);
+      if (st === 'loading') t = setTimeout(() => setShow(true), 250);
+      else setShow(false);
+    });
+    return () => { clearTimeout(t); off(); };
+  }, []);
+  if (!show) return null;
+  return (
+    <div className="tts-pill" role="status" aria-live="polite">
+      <span className="dots"><i /><i /><i /></span>
+    </div>
   );
 }
 
