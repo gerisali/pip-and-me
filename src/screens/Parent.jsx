@@ -3,9 +3,12 @@ import { useApp } from '../App.jsx';
 import { TopBar } from './Home.jsx';
 import { aggregate, buildWeeklyReport, download } from '../lib/report.js';
 import { events, kv } from '../lib/db.js';
-import { getLearner, resetLearner } from '../lib/learner.js';
+import { getLearner } from '../lib/learner.js';
 import { sortedPacks, setCurrentWeek, importPack, removeImported, saveSettings } from '../lib/content.js';
 import { fileToDataUrl } from '../lib/image.js';
+import { cloudOn, syncNow, syncSoon, resetEverywhere, lastSync } from '../lib/sync.js';
+import { setRole } from '../lib/db.js';
+import Icon from '../components/Icon.jsx';
 
 const DAY = 86400000;
 const ERR_TR = {
@@ -33,6 +36,7 @@ export default function Parent() {
           if (creating) {
             if (!/^\d{4,8}$/.test(pin)) return setErr('4–8 haneli bir PIN belirleyin.');
             await saveSettings({ ...settings, parentPin: pin });
+            syncSoon(300);
             setOk(true);
           } else if (pin === settings.parentPin) setOk(true);
           else setErr('PIN yanlış.');
@@ -47,18 +51,56 @@ export default function Parent() {
     );
   }
 
+  return <Panel tab={tab} setTab={setTab} />;
+}
+
+function Panel({ tab, setTab }) {
+  const { go, role, reload } = useApp();
+  const [ver, setVer] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [last, setLast] = useState(0);
+  const [syncErr, setSyncErr] = useState('');
+
+  async function doSync() {
+    setSyncing(true);
+    const r = await syncNow();
+    setSyncErr(r.error || '');
+    setLast(await lastSync());
+    setSyncing(false);
+    if (!r.skipped) {
+      await reload();
+      setVer((v) => v + 1);
+    }
+  }
+  useEffect(() => {
+    doSync();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="screen parent">
-      <TopBar title="Veli paneli" onBack={() => go('home')} />
+      <TopBar title="Veli paneli" onBack={() => go('home')} right={<button className="btn ghost small" onClick={() => go('home')}>Önizle</button>} />
+      <div className="sync-bar">
+        {cloudOn() ? (
+          <>
+            <span className={`dot ${syncErr ? 'bad' : 'ok'}`} />
+            <span>
+              {role === 'parent' ? 'Veli cihazı' : 'Çocuk cihazı'} · Bulut senkronu {syncErr ? `hata: ${syncErr}` : last ? `· son: ${new Date(last).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}` : ''}
+            </span>
+            <button className="btn small" onClick={doSync} disabled={syncing}><Icon name="replay" size={16} /> {syncing ? 'Senkronize ediliyor…' : 'Yenile'}</button>
+          </>
+        ) : (
+          <span className="tiny muted">Bulut senkronu kapalı — veriler sadece bu cihazda.</span>
+        )}
+      </div>
       <div className="tabs">
         {[['summary', 'Özet'], ['logs', 'Konuşmalar'], ['week', 'Hafta & rapor'], ['settings', 'Ayarlar']].map(([k, l]) => (
           <button key={k} className={`tab ${tab === k ? 'active' : ''}`} onClick={() => setTab(k)}>{l}</button>
         ))}
       </div>
-      {tab === 'summary' && <Summary />}
-      {tab === 'logs' && <Logs />}
-      {tab === 'week' && <WeekTab />}
-      {tab === 'settings' && <SettingsTab />}
+      {tab === 'summary' && <Summary key={ver} />}
+      {tab === 'logs' && <Logs key={ver} />}
+      {tab === 'week' && <WeekTab key={ver} />}
+      {tab === 'settings' && <SettingsTab key={ver} />}
     </div>
   );
 }
@@ -188,7 +230,7 @@ function WeekTab() {
     <div>
       <div className="card">
         <h3>Bu haftanın paketi</h3>
-        <select value={pack?.id} onChange={async (e) => { await setCurrentWeek(e.target.value); await refresh(); }}>
+        <select value={pack?.id} onChange={async (e) => { await setCurrentWeek(e.target.value); await refresh(); syncSoon(300); }}>
           {sortedPacks(packs).map((p) => <option key={p.id} value={p.id}>Hafta {p.week}: {p.title} ({p.level}){imported[p.id] ? ' · yüklendi' : ''}</option>)}
         </select>
         <p className="tiny muted">Hedef kalıplar: {(pack?.chunks || []).map((c) => c.text).join(' · ')}</p>
@@ -214,7 +256,8 @@ function WeekTab() {
             if (problems.length) return setMsg('Sorun: ' + problems.join(', '));
             await setCurrentWeek(p.id);
             await refresh();
-            setMsg(`Yüklendi ve seçildi: Hafta ${p.week} — ${p.title}`);
+            syncSoon(300);
+            setMsg(`Yüklendi ve seçildi: Hafta ${p.week} — ${p.title}${cloudOn() ? ' (kızınızın iPad\'ine de gönderiliyor)' : ''}`);
           } catch (err) {
             setMsg('Dosya okunamadı: ' + err.message);
           }
@@ -222,7 +265,7 @@ function WeekTab() {
         {msg && <p>{msg}</p>}
         {Object.keys(imported).length > 0 && (
           <div className="tiny">Yüklenen paketler: {Object.values(imported).map((p) => (
-            <span key={p.id} className="chip static">{p.id} <button className="link" onClick={async () => { await removeImported(p.id); await refresh(); }}>kaldır</button></span>
+            <span key={p.id} className="chip static">{p.id} <button className="link" onClick={async () => { await removeImported(p.id); await refresh(); syncSoon(300); }}>kaldır</button></span>
           ))}</div>
         )}
       </div>
@@ -234,7 +277,6 @@ function SettingsTab() {
   const { settings, health, refresh } = useApp();
   const [s, setS] = useState(settings);
   const [saved, setSaved] = useState(false);
-  const [confirm, setConfirm] = useState('');
   const upd = (k) => (e) => { setS({ ...s, [k]: e.target.type === 'number' ? Number(e.target.value) : e.target.value }); setSaved(false); };
   return (
     <div>
@@ -248,7 +290,7 @@ function SettingsTab() {
         </label>
         <label>Oturum süresi üst sınırı (dk)<input type="number" min={10} max={40} value={s.sessionMinutes} onChange={upd('sessionMinutes')} /></label>
         <label>Veli PIN<input type="password" inputMode="numeric" value={s.parentPin} onChange={upd('parentPin')} /></label>
-        <button className="btn primary" onClick={async () => { await saveSettings(s); setSaved(true); await refresh(); }}>Kaydet</button>
+        <button className="btn primary" onClick={async () => { await saveSettings(s); setSaved(true); await refresh(); syncSoon(300); }}>Kaydet</button>
         {saved && <p className="tiny">Kaydedildi ✓</p>}
       </div>
       <CharacterCard s={s} setS={setS} />
@@ -256,13 +298,59 @@ function SettingsTab() {
         <h3>Sistem durumu</h3>
         <p className="tiny">Mod: {health.mock ? 'Demo (API anahtarı yok)' : 'Canlı'} · Model: {health.chatModel || '—'} · Ses tanıma: {health.stt ? 'açık' : 'kapalı (klavye)'} · Ses: {health.tts || '—'}</p>
       </div>
-      <div className="card danger">
-        <h3>Verileri sıfırla</h3>
-        <p className="tiny muted">Tüm loglar ve öğrenci modeli silinir. Önce “Tam yedek” almanız önerilir. Onaylamak için SIL yazın.</p>
-        <div className="row"><input value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="SIL" />
-          <button className="btn" disabled={confirm !== 'SIL'} onClick={async () => { await events.clear(); await resetLearner(); await kv.del('books'); await kv.del('letters'); await kv.del('missionsDone'); setConfirm(''); await refresh(); }}>Sıfırla</button>
-        </div>
+      <DeviceCard />
+      <ResetCard />
+    </div>
+  );
+}
+
+function DeviceCard() {
+  const { role, health, refresh } = useApp();
+  if (!health.cloud) return null;
+  return (
+    <div className="card">
+      <h3>Bu cihaz</h3>
+      <p className="tiny">Şu an: <b>{role === 'parent' ? 'Veli cihazı' : 'Çocuk cihazı'}</b>. Çocuk cihazı ilerlemeyi buluta gönderir; veli cihazı sadece izler ve ayarları yönetir.</p>
+      <button className="btn small" onClick={async () => { const r = role === 'parent' ? 'child' : 'parent'; await kv.set('deviceRole', r); setRole(r); await refresh(); }}>
+        {role === 'parent' ? 'Bu cihazı çocuk cihazı yap' : 'Bu cihazı veli cihazı yap'}
+      </button>
+    </div>
+  );
+}
+
+function ResetCard() {
+  const { refresh, health } = useApp();
+  const [confirm, setConfirm] = useState('');
+  const [msg, setMsg] = useState('');
+  async function run(scope) {
+    setMsg('Sıfırlanıyor…');
+    try {
+      await resetEverywhere(scope);
+      setConfirm('');
+      setMsg(scope === 'all' ? 'Her şey sıfırlandı.' : 'İlerleme sıfırlandı.');
+      await refresh();
+    } catch (e) {
+      setMsg('Hata: ' + e.message);
+    }
+  }
+  return (
+    <div className="card danger">
+      <h3>Sıfırla</h3>
+      <p className="tiny muted">
+        {health.cloud ? 'Sıfırlama buluttaki veriyi de siler ve kızınızın iPad\'ine de uygulanır. ' : ''}Önce Hafta & rapor sekmesinden “Tam yedek” almanız önerilir. Onaylamak için kutuya SIL yazın.
+      </p>
+      <input value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="SIL" />
+      <div className="reset-opts">
+        <button className="btn" disabled={confirm !== 'SIL'} onClick={() => run('progress')}>
+          İlerlemeyi sıfırla
+          <span className="tiny muted">Konuşmalar, kelimeler, yıldızlar, mektuplar, hikâyeler, plan ve hafta. Ad, PIN ve karakter kalır.</span>
+        </button>
+        <button className="btn danger-btn" disabled={confirm !== 'SIL'} onClick={() => run('all')}>
+          Her şeyi sıfırla
+          <span className="tiny">Yukarıdakiler + ad, PIN, karakter ve yüklenen paketler. Uygulama ilk kurulum ekranına döner.</span>
+        </button>
       </div>
+      {msg && <p className="tiny">{msg}</p>}
     </div>
   );
 }
@@ -284,19 +372,21 @@ function CharacterCard({ s, setS }) {
   async function setMood(mood, file) {
     const all = { ...(await kv.get('characterImages', {})) };
     if (!all.idle && (await kv.get('characterImage', null))) all.idle = await kv.get('characterImage');
-    all[mood] = await fileToDataUrl(file, 700, 0.85);
+    all[mood] = await fileToDataUrl(file, 512, 0.8);
     await kv.set('characterImages', all);
     await refresh();
+    syncSoon(300);
   }
   async function clearAll() {
-    await kv.del('characterImages');
+    await kv.set('characterImages', null);
     await kv.del('characterImage');
     await refresh();
+    syncSoon(300);
   }
   return (
     <div className="card form">
       <h3>Karakter</h3>
-      <p className="tiny muted">Kızınızın kendi çizdiği ya da kullanım izni açık (ör. CC0) bir karakter kullanın. Görseller sadece bu cihazda saklanır.</p>
+      <p className="tiny muted">Kızınızın kendi çizdiği ya da kullanım izni açık (ör. CC0) bir karakter kullanın. Bulut açıksa görseller kızınızın iPad'ine de gönderilir.</p>
       <label>Adı<input value={s.characterName} onChange={(e) => { setS({ ...s, characterName: e.target.value }); setSaved(false); }} /></label>
       <label>Kısa tarifi (İngilizce — karakterin kişiliğini belirler)
         <input value={s.characterDescription} onChange={(e) => { setS({ ...s, characterDescription: e.target.value }); setSaved(false); }} placeholder="a cheerful young pop singer who loves animals" />
@@ -306,7 +396,7 @@ function CharacterCard({ s, setS }) {
           {VOICES.map((v) => <option key={v} value={v}>{v}</option>)}
         </select>
       </label>
-      <button className="btn primary" onClick={async () => { await saveSettings(s); setSaved(true); await refresh(); }}>Karakteri kaydet</button>
+      <button className="btn primary" onClick={async () => { await saveSettings(s); setSaved(true); await refresh(); syncSoon(300); }}>Karakteri kaydet</button>
       {saved && <p className="tiny">Kaydedildi ✓</p>}
       <h4>Görseller (her ruh hali için bir resim; sadece “Normal” yeterli)</h4>
       <div className="mood-grid">
