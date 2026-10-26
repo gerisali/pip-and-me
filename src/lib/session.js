@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { events } from './db.js';
 import { countSession } from './learner.js';
+import { syncSoon } from './sync.js';
 
 export const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -12,7 +13,8 @@ export function useSession(module, extra = {}) {
     const { id, started } = ref.current;
     events.add({ type: 'session_start', module, session: id, ...extra });
     countSession();
-    const end = () => events.add({ type: 'session_end', module, session: id, seconds: Math.round((Date.now() - started) / 1000) });
+    const end = () =>
+      events.add({ type: 'session_end', module, session: id, seconds: Math.round((Date.now() - started) / 1000) }).then(() => syncSoon());
     window.addEventListener('pagehide', end);
     return () => {
       window.removeEventListener('pagehide', end);

@@ -13,6 +13,10 @@ export async function getLearner() {
   if (!cache) cache = { ...empty(), ...(await kv.get('learner', empty())) };
   return cache;
 }
+// Drop the in-memory copy (after cloud sync replaced it).
+export function invalidateLearner() {
+  cache = null;
+}
 async function save() {
   await kv.set('learner', cache);
 }

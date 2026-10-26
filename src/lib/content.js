@@ -21,6 +21,10 @@ export async function loadPacks() {
   return packs;
 }
 
+export function invalidatePacks() {
+  packsCache = null;
+}
+
 export function sortedPacks(packs) {
   return Object.values(packs).sort((a, b) => (a.week || 0) - (b.week || 0));
 }

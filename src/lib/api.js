@@ -52,3 +52,11 @@ export async function ttsBlob(text, opts = {}) {
   if (!r.ok) return null;
   return await r.blob();
 }
+
+// Generic JSON call (used by cloud sync).
+export async function call(path, body) {
+  const r = await post(path, body);
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || `${path} ${r.status}`);
+  return d;
+}
