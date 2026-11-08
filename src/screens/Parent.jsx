@@ -8,6 +8,7 @@ import { cleanEvent } from '../lib/cleanAnalysis.js';
 import { sortedPacks, setCurrentWeek, importPack, removeImported, saveSettings } from '../lib/content.js';
 import { fileToDataUrl } from '../lib/image.js';
 import { cloudOn, syncNow, syncSoon, resetEverywhere, lastSync } from '../lib/sync.js';
+import { weekStatus, READY, MAX_LESSONS } from '../lib/progress.js';
 import { setRole } from '../lib/db.js';
 import Icon from '../components/Icon.jsx';
 
@@ -222,6 +223,37 @@ function Logs() {
   );
 }
 
+function WeekProgress() {
+  const { pack, settings, refresh } = useApp();
+  const [st, setSt] = useState(null);
+  useEffect(() => { weekStatus(pack).then(setSt); }, [pack]);
+  if (!st) return null;
+  const c = st.checks;
+  const row = (ok, text) => <div className="check-row"><span className={`dot ${ok ? 'ok' : ''}`} /> {text}</div>;
+  const auto = settings.autoAdvance !== false;
+  return (
+    <div className="card week-progress">
+      <h3>Haftanın ilerlemesi — Hafta {pack?.week}</h3>
+      <p className="tiny muted">Her ders günü tüm becerileri içerir: Word Lab → Talk → okuma/yazma (Mektup, Keşif, Hikâye sırayla) → Sesler. Aşağıdakilerin hepsi tamamlanınca bir sonraki haftaya kendiliğinden geçilir; en geç {MAX_LESSONS}. dersten sonra geçilir (zayıf kelimeler tekrar sisteminde kalmaya devam eder).</p>
+      {row(c.lessons.ok, `Tamamlanan ders: ${c.lessons.value} / en az ${c.lessons.target}`)}
+      {row(c.vocab.ok, `Doğru bildiği kelime: ${c.vocab.value} / ${c.vocab.total} (hedef ${c.vocab.target}, %${Math.round(READY.vocabShare * 100)})`)}
+      {row(c.missions.ok, `Tamamlanan konuşma görevi: ${c.missions.value} / ${c.missions.target}`)}
+      {row(c.patterns.ok, `Kendiliğinden kullandığı kalıp: ${c.patterns.value} / ${c.patterns.target}`)}
+      <p className="tiny">
+        {!st.next
+          ? 'Bu son hazır paket. Yeni paket için raporu Claude\'a gönderin.'
+          : st.ready
+            ? `Hazır: bir sonraki ders bittiğinde Hafta ${st.next.week}'e geçilecek.`
+            : `Sıradaki: Hafta ${st.next.week} — ${st.next.title}.`}
+      </p>
+      <label className="toggle">
+        <input type="checkbox" checked={auto} onChange={async (e) => { await saveSettings({ ...settings, autoAdvance: e.target.checked }); await refresh(); syncSoon(300); }} />
+        Otomatik hafta geçişi
+      </label>
+    </div>
+  );
+}
+
 function WeekTab() {
   const { packs, pack, refresh } = useApp();
   const [msg, setMsg] = useState('');
@@ -229,8 +261,9 @@ function WeekTab() {
   useEffect(() => { kv.get('importedPacks', {}).then(setImported); }, [packs]);
   return (
     <div>
+      <WeekProgress />
       <div className="card">
-        <h3>Bu haftanın paketi</h3>
+        <h3>Bu haftanın paketi (elle değiştirmek için)</h3>
         <select value={pack?.id} onChange={async (e) => { await setCurrentWeek(e.target.value); await refresh(); syncSoon(300); }}>
           {sortedPacks(packs).map((p) => <option key={p.id} value={p.id}>Hafta {p.week}: {p.title} ({p.level}){imported[p.id] ? ' · yüklendi' : ''}</option>)}
         </select>
@@ -283,12 +316,6 @@ function SettingsTab() {
     <div>
       <div className="card form">
         <label>Çocuğun adı<input value={s.childName} onChange={upd('childName')} /></label>
-        <label>Haftada kaç gün
-          <select value={s.daysPerWeek} onChange={(e) => setS({ ...s, daysPerWeek: Number(e.target.value) })}>
-            <option value={3}>3 gün (A, B, C oturumları)</option>
-            <option value={4}>4 gün (A, B, C, D oturumları)</option>
-          </select>
-        </label>
         <label>Oturum süresi üst sınırı (dk)<input type="number" min={10} max={40} value={s.sessionMinutes} onChange={upd('sessionMinutes')} /></label>
         <label>Veli PIN<input type="password" inputMode="numeric" value={s.parentPin} onChange={upd('parentPin')} /></label>
         <button className="btn primary" onClick={async () => { await saveSettings(s); setSaved(true); await refresh(); syncSoon(300); }}>Kaydet</button>
