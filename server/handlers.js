@@ -4,6 +4,7 @@ import { config, isMock } from './config.js';
 import { buildRequest } from './prompts.js';
 import { mockChat } from './mock.js';
 import { cloudEnabled, redis, pipeline, K } from './store.js';
+import { cleanAnalysis } from '../src/lib/cleanAnalysis.js';
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json' } });
@@ -128,6 +129,7 @@ export async function chat(req) {
   const outMod = await moderate(out.reply);
   if (outMod.flagged) return json({ ...SAFE_REDIRECT, analysis: out.analysis, moderated: true });
 
+  out.analysis = cleanAnalysis(out.analysis, lastChild, mode);
   return json({ ...out, usage: d.usage });
 }
 

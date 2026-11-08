@@ -2,12 +2,13 @@
 // who writes the next week's content pack from it.
 import { events, kv } from './db.js';
 import { getLearner } from './learner.js';
+import { cleanEvent } from './cleanAnalysis.js';
 
 const DAY = 86400000;
 const round = (x, d = 2) => Math.round(x * 10 ** d) / 10 ** d;
 
 export async function aggregate(sinceTs) {
-  const ev = await events.since(sinceTs);
+  const ev = (await events.since(sinceTs)).map(cleanEvent);
   const by = (t) => ev.filter((e) => e.type === t);
 
   const talk = by('talk_turn');

@@ -1,6 +1,7 @@
 // Learner model: what she knows, what she is still learning, what slips she makes.
 // Everything is also written to the event log so weekly reports can be rebuilt from raw data.
 import { kv, events } from './db.js';
+import { cleanEvent } from './cleanAnalysis.js';
 
 const DAY = 86400000;
 // Leitner boxes: 1 = new/forgotten … 5 = solid. Interval until the word is due again.
@@ -95,6 +96,32 @@ export async function countSession() {
   const L = await getLearner();
   L.sessions++;
   await save();
+}
+
+// One-time fix (child device): rebuild error/Turkish/pattern stats from saved turns with the cleaned analysis.
+// Older turns repeated earlier slips and marked correct full forms ("I am") as errors.
+export async function migrateAnalysisV1() {
+  if (await kv.get('analysisFixV1', false)) return false;
+  const L = await getLearner();
+  L.errors = {};
+  L.chunks = {};
+  L.turkish = [];
+  const all = (await events.all()).filter((e) => ['talk_turn', 'letter_reply', 'story_page'].includes(e.type) && e.analysis);
+  for (const raw of all) {
+    const a = cleanEvent(raw).analysis;
+    for (const e of a.errors || []) {
+      const rec = L.errors[e.type] || (L.errors[e.type] = { count: 0, examples: [] });
+      rec.count++;
+      rec.examples.unshift({ said: e.said, better: e.better, ts: raw.ts, mode: raw.type });
+      rec.examples = rec.examples.slice(0, 6);
+    }
+    for (const c of a.target_chunks_used || []) L.chunks[c] = (L.chunks[c] || 0) + 1;
+    for (const t of a.turkish_words || []) L.turkish.unshift({ ...t, ts: raw.ts });
+  }
+  L.turkish = L.turkish.slice(0, 60);
+  await save();
+  await kv.set('analysisFixV1', true);
+  return true;
 }
 
 // Short summary sent with each model request so Pip recycles weak words and recasts frequent slips.
