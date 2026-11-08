@@ -77,6 +77,7 @@ export const defaultSettings = {
   parentPin: '',
   sessionMinutes: 25,
   daysPerWeek: 3,
+  autoAdvance: true,
 };
 
 // Content packs are written with "Pip"; show the chosen character's name instead.
@@ -98,30 +99,8 @@ export async function saveSettings(s) {
   await kv.set('settings', s);
 }
 
-// Session plan rotation (see plan doc: A Talk+WordLab, B Mailbox+Phonics, C Story, D Explorer+free Talk)
-export const PLANS = [
-  { key: 'A', items: ['talk', 'wordlab'], label: 'Talk + Word Lab' },
-  { key: 'B', items: ['mailbox', 'phonics'], label: 'Mailbox + Sounds' },
-  { key: 'C', items: ['story'], label: 'Story Studio' },
-  { key: 'D', items: ['explorer', 'talk'], label: 'Explorer + Talk' },
-];
-const todayStr = () => new Date().toLocaleDateString('sv'); // YYYY-MM-DD, local time
-
-export async function todayPlan(daysPerWeek = 3) {
-  const st = await kv.get('planState', null);
-  if (st && st.date === todayStr()) {
-    return { plan: PLANS.find((p) => p.key === st.key) || PLANS[0], done: st.items, completed: st.completed };
-  }
-  const i = (await kv.get('planIndex', 0)) % (daysPerWeek >= 4 ? 4 : 3);
-  return { plan: PLANS[i], done: [], completed: false };
-}
-
-export async function markPlanItem(item, daysPerWeek = 3) {
-  const { plan, done, completed } = await todayPlan(daysPerWeek);
-  if (!plan.items.includes(item)) return completed;
-  const items = Array.from(new Set([...done, item]));
-  const nowComplete = plan.items.every((x) => items.includes(x));
-  await kv.set('planState', { date: todayStr(), key: plan.key, items, completed: nowComplete });
-  if (nowComplete && !completed) await kv.set('planIndex', (await kv.get('planIndex', 0)) + 1);
-  return nowComplete;
+// Daily lessons and week progression live in progress.js (it imports this file, so load it lazily).
+export async function markPlanItem(item) {
+  const { markStep } = await import('./progress.js');
+  return markStep(item);
 }

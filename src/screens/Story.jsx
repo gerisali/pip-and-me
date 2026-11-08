@@ -54,6 +54,7 @@ export default function Story() {
       await applyAnalysis(r.analysis, { mode: 'story', text: page.text, session });
       await addStars(1);
       speak(r.reply);
+      if (book.pages.every((p, k) => (k === i ? page.text : p.text))) markPlanItem('story', settings.daysPerWeek);
     } catch {
       setPipSays('Bağlantı sorunu, tekrar dene.');
     }

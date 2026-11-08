@@ -14,9 +14,9 @@ import { useSession } from '../lib/session.js';
 
 const MAX_TURNS = 14;
 
-export default function Talk() {
+export default function Talk({ missionId }) {
   const { pack, go, settings } = useApp();
-  const [mission, setMission] = useState(null);
+  const [mission, setMission] = useState(() => (pack?.talkMissions || []).find((m) => m.id === missionId) || null);
   const [done, setDone] = useState([]);
 
   useEffect(() => {

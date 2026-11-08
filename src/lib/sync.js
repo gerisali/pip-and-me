@@ -25,7 +25,7 @@ export async function lastSync() {
 // Wipe local data for a reset that happened (here or on another device).
 export async function applyReset(scope) {
   await events.clear();
-  for (const k of ['learner', 'letters', 'missionsDone', 'planState', 'planIndex', 'currentWeek', 'books', 'lastEventPushed']) await kv.del(k);
+  for (const k of ['learner', 'letters', 'missionsDone', 'planState', 'planIndex', 'lessonState', 'lessonIndex', 'weekUnlocked', 'currentWeek', 'books', 'lastEventPushed']) await kv.del(k);
   if (scope === 'all') for (const k of ['settings', 'characterImages', 'characterImage', 'importedPacks']) await kv.del(k);
   invalidateLearner();
   invalidatePacks();

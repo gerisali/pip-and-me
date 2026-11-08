@@ -3,7 +3,8 @@ import { useApp } from '../App.jsx';
 import Pip from '../character/Pip.jsx';
 import Icon from '../components/Icon.jsx';
 import { speak } from '../lib/audio.js';
-import { todayPlan } from '../lib/content.js';
+import { todayLesson, nextMission, STEP_MINUTES } from '../lib/progress.js';
+import { kv } from '../lib/db.js';
 import { getLearner } from '../lib/learner.js';
 
 export const MODULES = {
@@ -26,16 +27,28 @@ export function ModuleBadge({ m, size = 30 }) {
 export default function Home() {
   const { pack, settings, go, customImage } = useApp();
   const [plan, setPlan] = useState(null);
+  const [mission, setMission] = useState(null);
   const [stars, setStars] = useState(0);
+  const [unlocked, setUnlocked] = useState(null);
 
   useEffect(() => {
-    todayPlan(settings.daysPerWeek).then(setPlan);
+    todayLesson().then(async (l) => {
+      setPlan(l);
+      setMission(await nextMission(pack, l.index));
+    });
     getLearner().then((l) => setStars(l.stars));
-  }, [settings.daysPerWeek]);
+    kv.get('weekUnlocked', null).then((u) => u && !u.seen && setUnlocked(u));
+  }, [pack]);
+
+  useEffect(() => {
+    if (unlocked) speak(`Wow, ${settings.childName}! You are ready for a new week: ${pack?.title}!`);
+  }, [unlocked]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const name = settings.characterName || 'Pip';
   const greet = () => speak(`Hi ${settings.childName}! This week is "${pack?.title}". What shall we do today?`);
   const open = (m) => (m === 'phonics' ? go('wordlab', { mode: 'phonics' }) : go(m));
+  const openStep = (m) => (m === 'talk' && mission ? go('talk', { missionId: mission.id }) : open(m));
+  const minutes = plan ? plan.items.reduce((a, m) => a + (STEP_MINUTES[m] || 5), 0) : 0;
 
   return (
     <div className="home">
@@ -62,23 +75,37 @@ export default function Home() {
         </div>
       </section>
 
+      {unlocked && (
+        <section className="card unlocked" onClick={async () => { await kv.set('weekUnlocked', { ...unlocked, seen: true }); setUnlocked(null); }}>
+          <Icon name="star" size={34} className="star-icon" />
+          <div>
+            <b>New week! Week {unlocked.week}: {unlocked.title}</b>
+            <div className="tiny muted">Yeni haftaya geçtin! Kapatmak için dokun.</div>
+          </div>
+        </section>
+      )}
+
       {plan && (
         <section className="card today">
           <div className="section-head">
-            <h2>Today's plan</h2>
-            {plan.completed && <span className="done-pill"><Icon name="check" size={16} /> Done!</span>}
+            <h2>Today's lesson</h2>
+            {plan.completed ? <span className="done-pill"><Icon name="check" size={16} /> Done!</span> : <span className="tiny muted">~{minutes} min</span>}
           </div>
           <div className="plan-row">
-            {plan.plan.items.map((m, i) => (
-              <button key={m} className={`plan-tile ${plan.done.includes(m) ? 'done' : ''}`} onClick={() => open(m)}>
-                <span className="step-no">{plan.done.includes(m) ? <Icon name="check" size={16} stroke={3} /> : i + 1}</span>
-                <ModuleBadge m={m} size={34} />
-                <span className="plan-title">{MODULES[m].title}</span>
-                <span className="tiny muted">{MODULES[m].tr}</span>
-              </button>
-            ))}
+            {plan.items.map((m, i) => {
+              const done = plan.done.includes(m);
+              const next = !plan.completed && !done && plan.items.find((x) => !plan.done.includes(x)) === m;
+              return (
+                <button key={m} className={`plan-tile ${done ? 'done' : ''} ${next ? 'next' : ''}`} onClick={() => openStep(m)}>
+                  <span className="step-no">{done ? <Icon name="check" size={16} stroke={3} /> : i + 1}</span>
+                  <ModuleBadge m={m} size={34} />
+                  <span className="plan-title">{MODULES[m].title}</span>
+                  <span className="tiny muted">{m === 'talk' && mission ? mission.title : MODULES[m].tr}</span>
+                </button>
+              );
+            })}
           </div>
-          {plan.completed && <p className="muted center-text">Great job today! Bugünlük plan tamam — istersen başka bir şey de seçebilirsin.</p>}
+          {plan.completed && <p className="muted center-text">Great job today! Bugünkü ders tamam — istersen başka bir şey de seçebilirsin.</p>}
         </section>
       )}
 
