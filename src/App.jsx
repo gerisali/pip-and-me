@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { loadPacks, currentPack, getSettings, saveSettings, withCharacterName, getCharacterImages } from './lib/content.js';
-import { ensureWords } from './lib/learner.js';
+import { ensureWords, migrateAnalysisV1 } from './lib/learner.js';
 import { health, setCode } from './lib/api.js';
 import { setTtsMode, setVoice, unlockAudio, stopSpeaking, onTtsState } from './lib/audio.js';
 import { persist, kv, setRole } from './lib/db.js';
-import { setCloud, syncNow, startAutoSync, onSynced } from './lib/sync.js';
+import { setCloud, syncNow, startAutoSync, onSynced, syncSoon } from './lib/sync.js';
 import Home from './screens/Home.jsx';
 import Talk from './screens/Talk.jsx';
 import Mailbox from './screens/Mailbox.jsx';
@@ -48,6 +48,7 @@ export default function App() {
       if (role) await withTimeout(syncNow(), 8000);
       if (role !== 'parent') startAutoSync();
     }
+    if ((await kv.get('deviceRole', null)) !== 'parent' && (await migrateAnalysisV1())) syncSoon(2000);
     await reload(h);
   }, [reload]);
 

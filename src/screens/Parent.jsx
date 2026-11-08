@@ -4,6 +4,7 @@ import { TopBar } from './Home.jsx';
 import { aggregate, buildWeeklyReport, download } from '../lib/report.js';
 import { events, kv } from '../lib/db.js';
 import { getLearner } from '../lib/learner.js';
+import { cleanEvent } from '../lib/cleanAnalysis.js';
 import { sortedPacks, setCurrentWeek, importPack, removeImported, saveSettings } from '../lib/content.js';
 import { fileToDataUrl } from '../lib/image.js';
 import { cloudOn, syncNow, syncSoon, resetEverywhere, lastSync } from '../lib/sync.js';
@@ -184,7 +185,7 @@ function Stat({ label, value, hint }) {
 
 function Logs() {
   const [ev, setEv] = useState(null);
-  useEffect(() => { events.since(Date.now() - 30 * DAY).then((e) => setEv(e.reverse())); }, []);
+  useEffect(() => { events.since(Date.now() - 30 * DAY).then((e) => setEv(e.map(cleanEvent).reverse())); }, []);
   if (!ev) return null;
   const talk = ev.filter((e) => e.type === 'talk_turn');
   const sessions = [...new Set(talk.map((t) => t.session))];
