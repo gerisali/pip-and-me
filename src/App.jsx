@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { loadPacks, currentPack, getSettings, saveSettings, withCharacterName, getCharacterImages } from './lib/content.js';
 import { ensureWords, migrateAnalysisV1 } from './lib/learner.js';
 import { health, setCode } from './lib/api.js';
@@ -23,6 +23,7 @@ const withTimeout = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(()
 export default function App() {
   const [state, setState] = useState({ loading: true });
   const [screen, setScreen] = useState(null);
+  const weekChanged = useRef(false); // the week moved on during an activity: reload when she goes back home
 
   // Load everything from the local database (no network sync).
   const reload = useCallback(async (h) => {
@@ -55,14 +56,24 @@ export default function App() {
   useEffect(() => {
     persist();
     refresh();
-    return onSynced(({ changed }) => changed && reload());
+    const onWeek = () => (weekChanged.current = true);
+    window.addEventListener('pip:week-changed', onWeek);
+    const off = onSynced(({ changed }) => changed && reload());
+    return () => {
+      off();
+      window.removeEventListener('pip:week-changed', onWeek);
+    };
   }, [refresh, reload]);
 
   const go = useCallback((name, params = {}) => {
     stopSpeaking();
+    if (weekChanged.current) {
+      weekChanged.current = false;
+      reload();
+    }
     setScreen({ name, key: Date.now(), ...params });
     window.scrollTo(0, 0);
-  }, []);
+  }, [reload]);
 
   if (state.loading || !screen)
     return (

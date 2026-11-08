@@ -42,7 +42,13 @@ Yaklaşık 30 dakika sürer. Sonunda iPad'de ana ekranda bir "Pip & Me" uygulama
 4. İlk kez mikrofona dokunduğunda iPad mikrofon izni ister → *İzin Ver*.
 5. Sağ üstteki **Veli** düğmesi → kendinize bir PIN belirleyin.
 
-## 5. Haftalık döngü
+## 5. Dersler ve hafta geçişi
+
+- Her ders günü (haftada 3 gün, 25–30 dk) tüm becerileri içerir: **Word Lab → Talk → okuma/yazma → Sesler**. Okuma/yazma adımı sırayla Mektup, Keşif ve Hikâye olur. Yarım kalan ders ertesi gün kaldığı yerden devam eder.
+- Hafta **kendiliğinden** ilerler. En az 3 ders bitmiş olmalı, haftanın kelimelerinin %60'ını doğru bilmeli, 2 konuşma görevini tamamlamış olmalı ve haftanın 3 kalıbını kendiliğinden kullanmış olmalı. Hazır olmasa da en geç 5. dersten sonra geçilir; zayıf kelimeler tekrar sisteminde kalır.
+- **Veli → Hafta & rapor** bölümünde ilerleme görünür. Otomatik geçiş kapatılabilir, hafta elle de değiştirilebilir.
+
+## 6. Haftalık döngü
 
 1. Hafta sonunda: **Veli → Hafta & rapor → Son 7 gün raporu** → inen `.json` dosyasını Claude'daki **Daily** Project sohbetine gönderin.
 2. Claude yeni hafta paketini (`week-05.json` gibi) hazırlar.
