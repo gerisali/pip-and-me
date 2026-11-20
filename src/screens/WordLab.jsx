@@ -7,6 +7,7 @@ import Mic from '../components/Mic.jsx';
 import { speak, waitIdle, prefetch } from '../lib/audio.js';
 import { getLearner, dueWords, wordResult, addStars } from '../lib/learner.js';
 import { markPlanItem } from '../lib/content.js';
+import { events } from '../lib/db.js';
 import { useSession } from '../lib/session.js';
 
 const shuffle = (a) => a.map((x) => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map((p) => p[1]);
@@ -47,8 +48,10 @@ export default function WordLab({ mode = 'vocab' }) {
     })();
   }, [mode, pack, health.stt]);
 
+  // correct === null: speech recognition could not hear her clearly twice → no penalty, the word just comes back later
   async function answer(item, correct) {
-    await wordResult(item.word, correct, item.game, session);
+    if (correct === null) await events.add({ type: 'word_unclear', word: item.word, game: item.game, session });
+    else await wordResult(item.word, correct, item.game, session);
     if (correct) setScore((s) => s + 1);
     // move on only after the feedback voice has finished (and the child has seen the result)
     const t0 = Date.now();
@@ -91,7 +94,22 @@ export default function WordLab({ mode = 'vocab' }) {
 
 function Feedback({ state }) {
   if (state === null) return null;
+  if (state === 'unclear') return <div className="feedback no">Let's listen!</div>;
   return <div className={`feedback ${state ? 'ok' : 'no'}`}>{state ? 'Yes!' : 'Almost!'}</div>;
+}
+
+// Speech recognition often mishears one short word on its own (sun → mum). Be generous.
+function lev(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+export function saidWord(heard, word) {
+  const w = word.toLowerCase();
+  const toks = heard.toLowerCase().replace(/[^a-z' ]/g, ' ').split(/\s+/).filter(Boolean);
+  return toks.some((t) => t === w || t === w + 's' || t === w + 'es' || (w.length >= 4 && lev(t, w) <= 1));
 }
 
 function Listen({ item, onDone }) {
@@ -150,18 +168,29 @@ function Spell({ item, onDone }) {
 function Say({ item, onDone }) {
   const [res, setRes] = useState(null);
   const [heard, setHeard] = useState('');
+  const [tries, setTries] = useState(0);
   return (
     <div className="game">
       <div className="huge center-text">{item.emoji}</div>
       <p className="center-text">What is it? Say it! · Bu ne? Söyle!</p>
       {res === null && (
         <>
-          <Mic label="Say the word" prompt={item.word} onText={(t) => {
+          <Mic label="Say the word" prompt={`One English word: ${item.word}.`} onText={(t) => {
             setHeard(t);
-            const c = new RegExp(`\\b${item.word}s?\\b`, 'i').test(t);
-            setRes(c);
-            speak(c ? `Yes! ${item.word}!` : `It's ${item.word}. Say: ${item.word}.`, { rate: 0.85 });
-            onDone(item, c);
+            if (saidWord(t, item.word)) {
+              setRes(true);
+              speak(`Yes! ${item.word}!`, { rate: 0.85 });
+              return onDone(item, true);
+            }
+            if (tries === 0) {
+              // first miss: no judgement, just try again (it may be the microphone, not her)
+              setTries(1);
+              return speak("I didn't hear it well. Say it again!", { rate: 0.9 });
+            }
+            // second miss: model the word, no penalty
+            setRes('unclear');
+            speak(`Listen: ${item.word}. ${item.word}!`, { rate: 0.8 });
+            onDone(item, null);
           }} />
           <button className="btn ghost small" onClick={() => speak(item.word, { rate: 0.8 })}><Icon name="bulb" size={18} /> Help</button>
         </>
