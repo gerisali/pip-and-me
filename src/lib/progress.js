@@ -11,6 +11,7 @@
 import { kv, events, getRole } from './db.js';
 import { getLearner } from './learner.js';
 import { loadPacks, sortedPacks, currentPack, setCurrentWeek } from './content.js';
+import { patternIn } from './cleanAnalysis.js';
 
 export const ROTATION = ['mailbox', 'explorer', 'story'];
 export const STEP_MINUTES = { wordlab: 5, talk: 10, mailbox: 10, explorer: 10, story: 10, phonics: 3 };
@@ -67,7 +68,14 @@ export async function weekStatus(pack) {
   const known = vocab.filter((w) => (L.words[w]?.right || 0) > 0 && (L.words[w]?.box || 1) >= 2);
   const done = await kv.get('missionsDone', []);
   const missions = (pack.talkMissions || []).filter((m) => done.includes(m.id)).length;
-  const patterns = (pack.chunks || []).filter((c) => (L.chunks[c.text] || 0) > 0).length;
+  // a pattern counts if the model tagged it (even with slightly different wording) or her own words this week contain it
+  const tagged = Object.keys(L.chunks || {}).filter((k) => L.chunks[k] > 0);
+  const texts = all
+    .filter((e) => e.week === pack.id && (e.type === 'talk_turn' || e.type === 'letter_reply' || e.type === 'story_page'))
+    .map((e) => (e.type === 'talk_turn' ? e.childText : e.text) || '');
+  const patterns = (pack.chunks || []).filter(
+    (c) => tagged.some((k) => k === c.text || patternIn(c.text, k)) || texts.some((t) => patternIn(c.text, t))
+  ).length;
   const list = sortedPacks(await loadPacks());
   const next = list[list.findIndex((p) => p.id === pack.id) + 1] || null;
   const checks = {

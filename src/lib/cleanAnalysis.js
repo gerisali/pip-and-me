@@ -31,6 +31,17 @@ function partOf(frag, text) {
   return hit / f.length >= 0.7;
 }
 
+// Does a target pattern like "I like ... / I don't like ..." appear in a text? (one alternative, ≥70% of its words)
+export function patternIn(pattern, text) {
+  const t = new Set(tokens(expand(text)));
+  return String(pattern || '')
+    .split('/')
+    .some((alt) => {
+      const words = tokens(expand(alt.replace(/\.\.\.|…/g, ' ')));
+      return words.length > 0 && words.filter((w) => t.has(w)).length / words.length >= 0.7;
+    });
+}
+
 export function cleanAnalysis(a, childText, mode = 'talk') {
   if (!a || typeof a !== 'object' || !childText) return a;
   const speech = mode === 'talk' || mode === 'talk_turn';
@@ -44,14 +55,7 @@ export function cleanAnalysis(a, childText, mode = 'talk') {
   const turkish_words = (a.turkish_words || []).filter((w) => w && w.tr && partOf(w.tr, childText));
   const inText = (s) => partOf(s, childText);
   // a pattern like "I like ... / I don't like ..." counts if one of its alternatives is in the text
-  const chunkIn = (c) =>
-    String(c || '')
-      .split('/')
-      .some((alt) => {
-        const words = tokens(expand(alt.replace(/\.\.\.|…/g, ' ')));
-        const t = new Set(tokens(expand(childText)));
-        return words.length > 0 && words.filter((w) => t.has(w)).length / words.length >= 0.7;
-      });
+  const chunkIn = (c) => patternIn(c, childText);
   return {
     ...a,
     errors,
