@@ -3,6 +3,8 @@
 import { events, kv } from './db.js';
 import { getLearner } from './learner.js';
 import { cleanEvent } from './cleanAnalysis.js';
+import { weekStatus } from './progress.js';
+import { currentPack } from './content.js';
 
 const DAY = 86400000;
 const round = (x, d = 2) => Math.round(x * 10 ** d) / 10 ** d;
@@ -47,7 +49,7 @@ export async function aggregate(sinceTs) {
     .slice(0, 12)
     .map(([w, s]) => ({ word: w, ...s }));
 
-  const reading = by('read_aloud');
+  const reading = by('read_aloud').filter((r) => (r.heard || '').split(/\s+/).filter(Boolean).length >= 2);
   const misreads = {};
   for (const r of reading) for (const m of r.missed || []) misreads[m] = (misreads[m] || 0) + 1;
 
@@ -121,6 +123,15 @@ export async function buildWeeklyReport(days = 7) {
   const pages = ev.filter((e) => e.type === 'story_page').map((p) => ({ page: p.pageIndex, childText: p.text, corrected: p.corrected }));
 
   const boxes = [1, 2, 3, 4, 5].map((b) => Object.values(learner.words).filter((w) => w.box === b).length);
+  const st = await weekStatus(await currentPack()).catch(() => null);
+  const weekProgress = st && {
+    week: st.pack.id,
+    lessonsThisWeek: st.lessons,
+    checks: Object.fromEntries(Object.entries(st.checks).map(([k, v]) => [k, { value: v.value, target: v.target, ok: v.ok }])),
+    nextPack: st.next?.id || null,
+    lessonsCompleted: ev.filter((e) => e.type === 'lesson_complete').length,
+    weekAdvances: ev.filter((e) => e.type === 'week_advance').map((e) => ({ from: e.from, to: e.to, reason: e.reason, ts: new Date(e.ts).toISOString() })),
+  };
 
   return {
     schema: 'pip-weekly-report/1',
@@ -129,6 +140,7 @@ export async function buildWeeklyReport(days = 7) {
     currentWeek: week,
     child: { age: 9, firstLanguage: 'Turkish', name: settings.childName || undefined },
     metrics,
+    weekProgress,
     learnerSnapshot: {
       wordBoxes: { box1: boxes[0], box2: boxes[1], box3: boxes[2], box4: boxes[3], box5: boxes[4] },
       errorTotals: Object.fromEntries(Object.entries(learner.errors).map(([k, v]) => [k, v.count])),
