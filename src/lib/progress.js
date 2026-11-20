@@ -15,8 +15,8 @@ import { patternIn } from './cleanAnalysis.js';
 
 export const ROTATION = ['mailbox', 'explorer', 'story'];
 export const STEP_MINUTES = { wordlab: 5, talk: 10, mailbox: 10, explorer: 10, story: 10, phonics: 3 };
-export const READY = { minLessons: 3, vocabShare: 0.6, missions: 2, patterns: 3 };
-export const MAX_LESSONS = 5;
+export const READY = { minLessons: 3, vocabShare: 0.6, missions: 2, patterns: 2 };
+export const MAX_LESSONS = 4;
 
 const todayStr = () => new Date().toLocaleDateString('sv'); // YYYY-MM-DD, local time
 

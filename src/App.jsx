@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { loadPacks, currentPack, getSettings, saveSettings, withCharacterName, getCharacterImages } from './lib/content.js';
 import { ensureWords, migrateAnalysisV1 } from './lib/learner.js';
+import { maybeAdvance } from './lib/progress.js';
 import { health, setCode } from './lib/api.js';
 import { setTtsMode, setVoice, unlockAudio, stopSpeaking, onTtsState } from './lib/audio.js';
 import { persist, kv, setRole } from './lib/db.js';
@@ -49,7 +50,11 @@ export default function App() {
       if (role) await withTimeout(syncNow(), 8000);
       if (role !== 'parent') startAutoSync();
     }
-    if ((await kv.get('deviceRole', null)) !== 'parent' && (await migrateAnalysisV1())) syncSoon(2000);
+    if ((await kv.get('deviceRole', null)) !== 'parent') {
+      if (await migrateAnalysisV1()) syncSoon(2000);
+      // rules may have changed since her last lesson: move on now if she is already ready
+      if (await maybeAdvance().catch(() => null)) syncSoon(2000);
+    }
     await reload(h);
   }, [reload]);
 
