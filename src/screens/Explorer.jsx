@@ -61,6 +61,7 @@ function Card({ card, onBack }) {
                 label="Read aloud"
                 prompt={fact}
                 onText={async (heard) => {
+                  if (heard.split(/\s+/).filter(Boolean).length < 2) return speak("I couldn't hear you. Tap the mic, read, then tap again.");
                   const r = compareReading(fact, heard);
                   setReadRes(r);
                   await events.add({ type: 'read_aloud', source: 'explorer', target: fact, heard, missed: r.missed, accuracy: r.accuracy, session });

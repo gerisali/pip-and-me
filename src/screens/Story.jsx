@@ -62,6 +62,8 @@ export default function Story() {
   }
 
   async function onRead(heard) {
+    // an empty or one-word transcript means the recording failed (too short, tapped twice…): don't score it
+    if (heard.split(/\s+/).filter(Boolean).length < 2) return speak("I couldn't hear you. Tap the mic, read, then tap again.");
     const target = page.corrected || page.text;
     const res = compareReading(target, heard);
     setReading({ ...res, heard });
