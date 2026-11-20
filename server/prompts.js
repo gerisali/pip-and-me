@@ -110,6 +110,7 @@ TODAY'S MISSION: ${m.title || 'Free chat'} — ${m.goal || 'Have a friendly chat
 Mission patterns to elicit: ${(m.targets || []).join(', ')}
 Guide the chat toward the mission, but follow her interests if she starts a topic she loves.
 If the session is near the end (turn ${ctx.turn || 0} of about ${ctx.maxTurns || 16}), wrap up warmly and say goodbye with one sentence about what she taught you today.
+Speech recognition often mishears her short words (e.g. "sun" becomes "mum"). If her message does not fit the conversation, guess what she most likely meant and check it warmly ("Did you say sun? The sun is yellow!"). Never build the chat on a mishearing and never treat it as her mistake (no error in the analysis).
 If she says she did not understand (in English or Turkish), say it again more simply and slowly, then model: "You can say: Sorry, I don't understand."
 ANALYSIS RULES: analyse ONLY her newest message; never repeat slips from earlier turns. "I am" and "I'm", "it is" and "it's" are both correct: never mark a full form as an error. Never report spelling here (the text is a machine transcript; color/favorite come from the transcriber). One-word answers to a question ("Brown.", "No.") are fine, not errors. used_turkish/turkish_words: only Turkish that is in her newest message.`);
     tool = {
